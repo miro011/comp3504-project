@@ -6,6 +6,11 @@
 - Miroslav Nikolov
 - Travis Tkachyk
 
+## SCRUM Info
+### Story Point Rubric
+[Source](https://asana.com/resources/story-points)
+![Story Points Rubric](https://assets.asana.biz/m/2d3019c97967427d/original/inline-story-points-1-2x.jpg)
+
 ## Structure (suggestion from Terrence)
 ### /backend
 Contains anything for the backend APIs, databases, and such.
