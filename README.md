@@ -1,5 +1,11 @@
 # COMP 3504 Term Project for Fall 2022.
 
+## Group Info
+- Terrence Plunkett
+- Lorenzo Young
+- Miroslav Nikolov
+- Travis Tkachyk
+
 ## Structure (suggestion from Terrence)
 ### /backend
 Contains anything for the backend APIs, databases, and such.
