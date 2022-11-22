@@ -60,9 +60,13 @@ class _MyAppState extends State<MyApp> {
                   markerId: const MarkerId("currentLocation"),
                   position: LatLng(currentPosition!.latitude!, currentPosition!.longitude!),
                 ),
-            },
-
-          ),
+                myLocationEnabled: true,
+                // markers: {
+                //     Marker(
+                //       markerId: const MarkerId("currentLocation"),
+                //       position: LatLng(currentPosition!.latitude!, currentPosition!.longitude!),
+                //     ),
+                // },
       ),
     );
   }
