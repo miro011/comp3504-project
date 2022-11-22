@@ -7,11 +7,11 @@ jobs:
     name: Dart Test
     runs-on: ubuntu-latest
     container:
-      image: dart:stable
+      image: flutter:stable
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
       - name: Run Dart Tests
         run: dart test

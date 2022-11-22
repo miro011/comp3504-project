@@ -7,11 +7,11 @@ jobs:
     name: Dart Analyze Linter
     runs-on: ubuntu-latest
     container:
-      image:  dart:stable
+      image:  flutter:stable
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
       - name: Run Dart Analyze
         run: dart analyze ${{ github.action_path }}
