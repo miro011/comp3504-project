@@ -1,0 +1,17 @@
+name: Tests
+
+on: pull_request
+
+jobs:
+  test:
+    name: Dart Test
+    runs-on: ubuntu-latest
+    container:
+      image: dart:stable
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: dart pub get
+      - name: Run Dart Tests
+        run: dart test

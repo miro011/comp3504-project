@@ -1,0 +1,17 @@
+name: Linter
+
+on: pull_request
+
+jobs:
+  lint:
+    name: Dart Analyze Linter
+    runs-on: ubuntu-latest
+    container:
+      image:  dart:stable
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: dart pub get
+      - name: Run Dart Analyze
+        run: dart analyze ${{ github.action_path }}
