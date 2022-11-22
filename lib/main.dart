@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,18 +16,18 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late GoogleMapController mapController;
-
-
+  Set<Marker> _markers = HashSet<Marker>();
+  int _markerIdCounter = 1;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-
-
   Position? currentPosition;
+
   void getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
     setState(() {
       currentPosition = position;
@@ -48,26 +48,82 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Maps Sample App'),
           backgroundColor: Colors.green[700],
         ),
-        body: currentPosition == null ? const Text("Loading")
+        body: currentPosition == null
+            ? const Text("Loading")
             : GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(currentPosition!.latitude!, currentPosition!.longitude!),
-                zoom: 11.0,
-              ),
-            markers: {
-                Marker(
-                  markerId: const MarkerId("currentLocation"),
-                  position: LatLng(currentPosition!.latitude!, currentPosition!.longitude!),
-                ),
-                myLocationEnabled: true,
-                // markers: {
-                //     Marker(
-                //       markerId: const MarkerId("currentLocation"),
-                //       position: LatLng(currentPosition!.latitude!, currentPosition!.longitude!),
-                //     ),
-                // },
+          // onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(
+                currentPosition!.latitude!, currentPosition!.longitude!),
+            zoom: 11.0,
+          ),
+          myLocationEnabled: true,
+          onMapCreated: (GoogleMapController controller) {
+            mapController = controller;
+          },
+        ),
       ),
     );
   }
+  void _setMarkers(LatLng point) {
+    final String markerIdVal = 'marker_id_$_markerIdCounter';
+    _markerIdCounter++;
+    setState(() {
+      print(
+          'Marker | Latitude: ${point.latitude}  Longitude: ${point.longitude}');
+      _markers.add(
+        Marker(
+          markerId: MarkerId(markerIdVal),
+          position: point,
+        ),
+      );
+    });
+  }
+}
+
+class MapPainter extends CustomPainter {
+  final Map<String, MapLandmark> landmarksMap;
+  late Paint p;
+  bool debugPaint = false;
+
+  MapPainter(this.landmarksMap) {
+    p = Paint()
+      ..strokeWidth = 5.0
+      ..color = Colors.orange
+      ..style = PaintingStyle.stroke;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (landmarksMap != null && landmarksMap.length > 0) {
+      landmarksMap.forEach((id, value) {
+        canvas.drawCircle(
+            Offset(
+                value.screenPoint.x.toDouble(), value.screenPoint.y.toDouble()),
+            8,
+            p);
+      });
+    } else {
+      canvas.drawCircle(Offset(70, 70), 25, p);
+    }
+  } //paint()
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class MapLandmark {
+  Position pos;
+  late ScreenPoint screenPoint;
+
+  MapLandmark(this.pos){
+    screenPoint = ScreenPoint();
+  }
+}
+
+class ScreenPoint {
+  int x;
+  int y;
+
+  ScreenPoint({this.x=0, this.y=0});
 }
