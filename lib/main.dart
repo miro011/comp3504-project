@@ -3,6 +3,8 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart' as locations;
+import 'package:location_platform_interface/location_platform_interface.dart' as lpi;
 
 
 void main() => runApp(const MyApp());
@@ -37,6 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     getCurrentLocation();
+    _initLocationService();
     super.initState();
   }
 
@@ -65,6 +68,32 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+  Future _initLocationService() async {
+    var location = locations.Location();
+
+    location.onLocationChanged.listen((locations.LocationData loc) {
+      print("${loc.latitude} ${loc.longitude}");
+    });
+
+    if (!await location.serviceEnabled()) {
+      if (!await location.requestService()) {
+        return;
+      }
+    }
+
+    var permission = await location.hasPermission();
+    if (permission == lpi.PermissionStatus.denied) {
+      permission = await location.requestPermission();
+      if (permission != lpi.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    var loc = await location.getLocation();
+    print("${loc.latitude} ${loc.longitude}");
+  }
+
   void _setMarkers(LatLng point) {
     final String markerIdVal = 'marker_id_$_markerIdCounter';
     _markerIdCounter++;
