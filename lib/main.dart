@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
 import 'package:location_platform_interface/location_platform_interface.dart' as lpi;
+import 'package:tuple/tuple.dart';
 
 
 void main() => runApp(const MyApp());
@@ -18,11 +19,26 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late GoogleMapController mapController;
+  var recordedPositions = Queue<Tuple2<double, double>>();
+  static const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
+
   Set<Marker> _markers = HashSet<Marker>();
   int _markerIdCounter = 1;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  void _recordPosition(locations.LocationData loc) {
+    if (recordedPositions.length >= MAX_RECORDED_POSITIONS_IN_MEMORY) {
+      recordedPositions.removeFirst();
+    }
+
+    if (loc.latitude != null && loc.longitude != null) {
+      recordedPositions.addLast(
+          Tuple2<double, double>(loc.latitude!, loc.longitude!));
+      print("Just recorded ${loc.latitude} ${loc.longitude} for a total of ${recordedPositions.length}");
+    }
   }
 
   Position? currentPosition;
@@ -72,9 +88,7 @@ class _MyAppState extends State<MyApp> {
   Future _initLocationService() async {
     var location = locations.Location();
 
-    location.onLocationChanged.listen((locations.LocationData loc) {
-      print("${loc.latitude} ${loc.longitude}");
-    });
+    location.onLocationChanged.listen(_recordPosition);
 
     if (!await location.serviceEnabled()) {
       if (!await location.requestService()) {
