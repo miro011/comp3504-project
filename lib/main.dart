@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
     mapController = controller;
   }
 
-  Position? currentPosition;
+ Position? currentPosition;
 
   void getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -36,8 +36,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    //sets camera at current location
     getCurrentLocation();
+
     super.initState();
+
+    //initialize polygon
+    _polygon.add(
+        Polygon(
+          // given polygonId
+          polygonId: PolygonId('1'),
+          // initialize the list of points to display polygon
+          points: points,
+          // given color to polygon
+          fillColor: Colors.green.withOpacity(0.3),
+          // given border color to polygon
+          strokeColor: Colors.green,
+          geodesic: true,
+          // given width of border
+          strokeWidth: 4,
+        )
+    );
   }
 
   @override
@@ -58,13 +77,17 @@ class _MyAppState extends State<MyApp> {
             zoom: 11.0,
           ),
           myLocationEnabled: true,
+          polygons: _polygon,
           onMapCreated: (GoogleMapController controller) {
             mapController = controller;
           },
+
         ),
       ),
     );
   }
+
+
   void _setMarkers(LatLng point) {
     final String markerIdVal = 'marker_id_$_markerIdCounter';
     _markerIdCounter++;
@@ -79,6 +102,15 @@ class _MyAppState extends State<MyApp> {
       );
     });
   }
+
+  Set<Polygon> _polygon = HashSet<Polygon>();
+
+  List<LatLng> points = [
+    LatLng(19.0759837, 72.8776559),
+    LatLng(28.679079, 77.069710),
+    LatLng(26.850000, 80.949997),
+
+  ];
 }
 
 class MapPainter extends CustomPainter {
