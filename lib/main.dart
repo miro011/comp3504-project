@@ -49,7 +49,8 @@ class _MyAppState extends State<MyApp> {
           // initialize the list of points to display polygon
           points: points,
           // given color to polygon
-          fillColor: Colors.green.withOpacity(0.3),
+          //fillColor: Colors.green,
+          fillColor: Colors.green.withOpacity(0.8),
           // given border color to polygon
           strokeColor: Colors.green,
           geodesic: true,
@@ -78,6 +79,7 @@ class _MyAppState extends State<MyApp> {
           ),
           myLocationEnabled: true,
           polygons: _polygon,
+
           onMapCreated: (GoogleMapController controller) {
             mapController = controller;
           },
@@ -105,10 +107,19 @@ class _MyAppState extends State<MyApp> {
 
   Set<Polygon> _polygon = HashSet<Polygon>();
 
+
   List<LatLng> points = [
-    LatLng(19.0759837, 72.8776559),
-    LatLng(28.679079, 77.069710),
-    LatLng(26.850000, 80.949997),
+
+   LatLng(85,90),  LatLng(85,0.1),
+   LatLng(85,-90),  LatLng(85,-179.9),
+   LatLng(0,-179.9), LatLng(-85,-179.9),
+   LatLng(-85,-90),  LatLng(-85,0.1),
+  LatLng(-85,90),  LatLng(-85,179.9),
+   LatLng(0,179.9), LatLng(85,179.9),
+
+
+
+
 
   ];
 }
