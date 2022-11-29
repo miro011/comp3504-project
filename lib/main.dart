@@ -50,9 +50,9 @@ class _MyAppState extends State<MyApp> {
           points: points,
           // given color to polygon
           //fillColor: Colors.green,
-          fillColor: Colors.green.withOpacity(0.8),
+          fillColor: Colors.blueGrey.withOpacity(0.8),
           // given border color to polygon
-          strokeColor: Colors.green,
+          strokeColor: Colors.blueGrey,
           geodesic: true,
           // given width of border
           strokeWidth: 4,
