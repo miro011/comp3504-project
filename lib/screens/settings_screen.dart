@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class SettingScreen extends StatelessWidget {
+  const SettingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Home(),
+      home: Settings(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Settings extends StatefulWidget {
+  const Settings({Key? key}) : super(key: key);
 
   @override
-  _Home createState() => _Home();
+  State<Settings> createState() => _SettingsState();
 }
 
-class _Home extends State<Home> {
+class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Home",
+          "Settings",
         ),
       ),
       body: const Center(
-        child: Text('Home'),
+        child: Text('Settings'),
       ),
     );
   }
