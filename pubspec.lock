@@ -415,7 +415,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
-<<<<<<< HEAD
   path_provider:
     dependency: transitive
     description:
@@ -465,14 +464,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  platform:
-    dependency: transitive
-    description:
-      name: platform
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0"
-=======
   petitparser:
     dependency: transitive
     description:
@@ -480,7 +471,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.1.0"
->>>>>>> 07c40a507c318ff5f85479750f7ce045dd8dff78
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -675,7 +672,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-<<<<<<< HEAD
   win32:
     dependency: transitive
     description:
@@ -690,7 +686,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0+2"
-=======
   xml:
     dependency: transitive
     description:
@@ -698,7 +693,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
->>>>>>> 07c40a507c318ff5f85479750f7ce045dd8dff78
   yaml:
     dependency: transitive
     description:

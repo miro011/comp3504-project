@@ -1,30 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:term_project/screens/defaults.dart';
 
 void main() {
-  runApp(const NaviScreen());
+  runApp(const MyApp());
 }
 
-class NaviScreen extends StatelessWidget {
-  const NaviScreen({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: DashBoard(),
-      debugShowCheckedModeBanner: false,
+      home: MainPage(),
     );
   }
 }
 
-class DashBoard extends StatefulWidget {
-  const DashBoard({super.key});
+var indexClicked = 3;
+
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  _DashBoard createState() => _DashBoard();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _DashBoard extends State<DashBoard> {
+class _MainPageState extends State<MainPage> {
+  final pages = [
+    const Center(
+      child: Text('Home'),
+    ),
+    const Center(
+      child: Text('Map Area'),
+    ),
+    const Center(
+      child: Text('High Score'),
+    ),
+    const Center(
+      child: Text('Settings'),
+    ),
+    const Center(
+      child: Text('Exit'),
+    ),
+    const Center(
+      child: Text('Log In'),
+    ),
+    const Center(
+      child: Text('Register'),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,15 +63,14 @@ class _DashBoard extends State<DashBoard> {
             ),
           ),
         ),
-        title: const Text(
-          "Dashboard",
-        ),
+        backgroundColor: Colors.transparent,
+        title: const Text('Home'),
       ),
+      body: pages[indexClicked],
       drawer: Drawer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //Drawer Header
             DrawerHeader(
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -54,98 +79,133 @@ class _DashBoard extends State<DashBoard> {
                 ),
               ),
               padding: const EdgeInsets.all(0),
-              child: Column(
+              child: Container(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const CircleAvatar(
+                      radius: 40,
+                      foregroundImage:
+                          AssetImage('assets/images/icons/app_icon.png'),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Globe Travela',
+                      style: GoogleFonts.acme(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const CircleAvatar(
-                    radius: 45,
-                    backgroundImage:
-                        AssetImage('assets/images/background/bg05.png'),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Inventory System',
-                    style: GoogleFonts.acme(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  ListTile(
+                    leading: Icon(
+                      Defaults.naviItemIcon[0],
+                      size: 35,
+                      color: indexClicked == 0
+                          ? Defaults.naviItemSelectedColor
+                          : Defaults.naviItemColor,
+                    ),
+                    title: Text(
+                      Defaults.naviItemText[0],
+                      style: GoogleFonts.acme(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: indexClicked == 0
+                            ? Defaults.naviItemSelectedColor
+                            : Defaults.naviItemColor,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 5,
+                  ListTile(
+                    leading: Icon(
+                      Defaults.naviItemIcon[1],
+                      size: 35,
+                      color: indexClicked == 1
+                          ? Defaults.naviItemSelectedColor
+                          : Defaults.naviItemColor,
+                    ),
+                    title: Text(
+                      Defaults.naviItemText[1],
+                      style: GoogleFonts.acme(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: indexClicked == 1
+                            ? Defaults.naviItemSelectedColor
+                            : Defaults.naviItemColor,
+                      ),
+                    ),
                   ),
-                  Text(
-                    'COMP3504',
-                    style: GoogleFonts.acme(
-                      fontSize: 12,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  ListTile(
+                    leading: Icon(
+                      Defaults.naviItemIcon[2],
+                      size: 35,
+                      color: indexClicked == 2
+                          ? Defaults.naviItemSelectedColor
+                          : Defaults.naviItemColor,
+                    ),
+                    title: Text(
+                      Defaults.naviItemText[2],
+                      style: GoogleFonts.acme(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: indexClicked == 2
+                            ? Defaults.naviItemSelectedColor
+                            : Defaults.naviItemColor,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Defaults.naviItemIcon[3],
+                      size: 35,
+                      color: indexClicked == 3
+                          ? Defaults.naviItemSelectedColor
+                          : Defaults.naviItemColor,
+                    ),
+                    title: Text(
+                      Defaults.naviItemText[3],
+                      style: GoogleFonts.acme(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: indexClicked == 3
+                            ? Defaults.naviItemSelectedColor
+                            : Defaults.naviItemColor,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Defaults.naviItemIcon[4],
+                      size: 35,
+                      color: indexClicked == 4
+                          ? Defaults.naviItemSelectedColor
+                          : Defaults.naviItemColor,
+                    ),
+                    title: Text(
+                      Defaults.naviItemText[4],
+                      style: GoogleFonts.acme(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: indexClicked == 4
+                            ? Defaults.naviItemSelectedColor
+                            : Defaults.naviItemColor,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            // Navigation list of the Drawer
-            ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(5),
-              children: const <Widget>[
-                Card(
-                  child: ListTile(
-                    leading: Image(
-                      image: AssetImage('assets/images/background/bg05.png'),
-                    ),
-                    title: Text('Log In'),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    leading: Image(
-                      image: AssetImage('assets/images/background/bg05.png'),
-                    ),
-                    title: Text('High Score'),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    leading: Image(
-                      image: AssetImage('assets/images/background/bg05.png'),
-                    ),
-                    title: Text('Settings'),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    leading: Image(
-                      image: AssetImage('assets/images/background/bg05.png'),
-                    ),
-                    title: Text('Search Item'),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    leading: Image(
-                      image: AssetImage('assets/images/background/bg05.png'),
-                    ),
-                    title: Text('App Info'),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.exit_to_app_sharp,
-                      size: 50,
-                      color: Colors.black,
-                    ),
-                    title: Text('Exit'),
-                  ),
-                ),
-              ],
             ),
           ],
         ),
