@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
           // onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: LatLng(
-                currentPosition!.latitude!, currentPosition!.longitude!),
+                currentPosition!.latitude, currentPosition!.longitude),
             zoom: 11.0,
           ),
           myLocationEnabled: true,
