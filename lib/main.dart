@@ -54,9 +54,33 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    //sets camera at current location
     getCurrentLocation();
     _initLocationService();
+
     super.initState();
+
+    //initialize polygon
+    _polygon.add(
+        Polygon(
+          // given polygonId
+          polygonId: PolygonId('1'),
+          // initialize the list of points to display polygon
+          points: entireMapPoints,
+          //draws a hole in the Polygon
+          holes: calgaryPoints,
+          // given color to polygon
+          //fillColor: Colors.green,
+          fillColor: Colors.blueGrey.withOpacity(0.8),
+          // given border color to polygon
+          strokeColor: Colors.blueGrey,
+          geodesic: true,
+          // given width of border
+          strokeWidth: 4,
+        )
+
+    );
+
   }
 
   @override
@@ -77,9 +101,12 @@ class _MyAppState extends State<MyApp> {
             zoom: 11.0,
           ),
           myLocationEnabled: true,
+          polygons: _polygon,
+
           onMapCreated: (GoogleMapController controller) {
             mapController = controller;
           },
+
         ),
       ),
     );
@@ -122,6 +149,26 @@ class _MyAppState extends State<MyApp> {
       );
     });
   }
+
+  Set<Polygon> _polygon = HashSet<Polygon>();
+
+
+  List<LatLng> entireMapPoints = [
+
+   LatLng(85,90),  LatLng(85,0.1),
+   LatLng(85,-90),  LatLng(85,-179.9),
+   LatLng(0,-179.9), LatLng(-85,-179.9),
+   LatLng(-85,-90),  LatLng(-85,0.1),
+  LatLng(-85,90),  LatLng(-85,179.9),
+   LatLng(0,179.9), LatLng(85,179.9),
+  ];
+
+  List<List<LatLng>>  calgaryPoints = [[
+
+    LatLng(51.183790624241, -114.2231309845041),  LatLng(51.183790624241, -113.86058216181912),
+    LatLng(50.85985482312287, -113.86058216181912),  LatLng(50.85985482312287, -114.2231309845041),
+
+  ]];
 }
 
 class MapPainter extends CustomPainter {
