@@ -78,9 +78,7 @@ class _MyAppState extends State<MyApp> {
           // given width of border
           strokeWidth: 4,
         )
-
     );
-
   }
 
   @override
@@ -140,7 +138,8 @@ class _MyAppState extends State<MyApp> {
     _markerIdCounter++;
     setState(() {
       print(
-          'Marker | Latitude: ${point.latitude}  Longitude: ${point.longitude}');
+          'Marker | Latitude: ${point.latitude}  Longitude: ${point
+              .longitude}');
       _markers.add(
         Marker(
           markerId: MarkerId(markerIdVal),
@@ -152,22 +151,20 @@ class _MyAppState extends State<MyApp> {
 
   Set<Polygon> _polygon = HashSet<Polygon>();
 
-
   List<LatLng> entireMapPoints = [
-
-   LatLng(85,90),  LatLng(85,0.1),
-   LatLng(85,-90),  LatLng(85,-179.9),
-   LatLng(0,-179.9), LatLng(-85,-179.9),
-   LatLng(-85,-90),  LatLng(-85,0.1),
-  LatLng(-85,90),  LatLng(-85,179.9),
-   LatLng(0,179.9), LatLng(85,179.9),
+    LatLng(85, 90), LatLng(85, 0.1),
+    LatLng(85, -90), LatLng(85, -179.9),
+    LatLng(0, -179.9), LatLng(-85, -179.9),
+    LatLng(-85, -90), LatLng(-85, 0.1),
+    LatLng(-85, 90), LatLng(-85, 179.9),
+    LatLng(0, 179.9), LatLng(85, 179.9),
   ];
 
-  List<List<LatLng>>  calgaryPoints = [[
-
-    LatLng(51.183790624241, -114.2231309845041),  LatLng(51.183790624241, -113.86058216181912),
-    LatLng(50.85985482312287, -113.86058216181912),  LatLng(50.85985482312287, -114.2231309845041),
-
+  List<List<LatLng>> calgaryPoints = [[
+    LatLng(51.183790624241, -114.2231309845041),
+    LatLng(51.183790624241, -113.86058216181912),
+    LatLng(50.85985482312287, -113.86058216181912),
+    LatLng(50.85985482312287, -114.2231309845041),
   ]];
 }
 
