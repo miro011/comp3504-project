@@ -22,9 +22,6 @@ class _MyAppState extends State<MyApp> {
   var recordedPositions = Queue<Tuple2<double, double>>();
   static const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
 
-  Set<Marker> _markers = HashSet<Marker>();
-  int _markerIdCounter = 1;
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -131,22 +128,6 @@ class _MyAppState extends State<MyApp> {
 
     var loc = await location.getLocation();
     print("${loc.latitude} ${loc.longitude}");
-  }
-
-  void _setMarkers(LatLng point) {
-    final String markerIdVal = 'marker_id_$_markerIdCounter';
-    _markerIdCounter++;
-    setState(() {
-      print(
-          'Marker | Latitude: ${point.latitude}  Longitude: ${point
-              .longitude}');
-      _markers.add(
-        Marker(
-          markerId: MarkerId(markerIdVal),
-          position: point,
-        ),
-      );
-    });
   }
 
   Set<Polygon> _polygon = HashSet<Polygon>();
