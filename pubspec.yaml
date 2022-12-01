@@ -41,11 +41,8 @@ dependencies:
   google_maps_flutter_web: ^0.4.0+3
   geolocator: ^9.0.2
   geocoding: ^2.0.5
-<<<<<<< HEAD
   google_fonts: ^3.0.1
-=======
   tuple: ^2.0.1
->>>>>>> 3bfde2f99999dc90a00b3a93d740f0ed542cebe9
 
 dev_dependencies:
   flutter_test:
