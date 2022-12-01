@@ -6,8 +6,8 @@ class Defaults {
 
   static const naviItemText = [
     'Home',
-    'Map Area',
     'High Score',
+    'Map Area',
     'Settings',
     'Exit',
     'Log In',
@@ -16,11 +16,20 @@ class Defaults {
 
   static const naviItemIcon = [
     Icons.home,
-    Icons.map,
     Icons.scoreboard,
+    Icons.map,
     Icons.settings,
     Icons.exit_to_app,
     Icons.login,
     Icons.app_registration,
+  ];
+
+  static const navigationRoutes = [
+    '/',
+    '/high_score',
+    '/map_screen',
+    '/settings_screen',
+    '/login_screen',
+    '/registration_screen',
   ];
 }
