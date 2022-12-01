@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+// import 'package:term_project/main.dart';
 import 'package:term_project/screens/home_screen.dart';
 import 'package:term_project/screens/login_screen.dart';
+import 'package:term_project/screens/main_screen.dart';
 
 import '../screens/high_score.dart';
 import '../screens/registration_screen.dart';
@@ -14,7 +16,7 @@ class Routing {
       case "/high_score":
         return MaterialPageRoute(builder: (_) => const HighScore());
       case '/map_screen':
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const MyApp());
       case '/settings_screen':
         return MaterialPageRoute(builder: (_) => const Settings());
       case '/login_screen':

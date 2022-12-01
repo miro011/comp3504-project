@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:term_project/routes/routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const Navi());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Navi extends StatelessWidget {
+  const Navi({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

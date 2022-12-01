@@ -15,7 +15,7 @@ class SettingScreen extends StatelessWidget {
   }
 }
 
-var indexClicked = 5;
+var indexClicked = 3;
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
