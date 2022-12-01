@@ -5,10 +5,20 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Login(),
-      debugShowCheckedModeBanner: false,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Home",
+        ),
+      ),
+      body: const Center(
+        child: Text('Home'),
+      ),
     );
+    // return const MaterialApp(
+    //   home: Login(),
+    //   debugShowCheckedModeBanner: false,
+    // );
   }
 }
 
@@ -20,16 +30,17 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Log in ",
+          "Home",
         ),
       ),
       body: const Center(
-        child: Text('Log In'),
+        child: Text('Home'),
       ),
     );
   }

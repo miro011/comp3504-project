@@ -3,31 +3,28 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:term_project/screens/defaults.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class HighScoreScreen extends StatelessWidget {
+  const HighScoreScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomeScreen(),
+      home: HighScore(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-var indexClicked = 0;
+var indexClicked = 1;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HighScore extends StatefulWidget {
+  const HighScore({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreen();
+  State<HighScore> createState() => _HighScoreState();
 }
 
-class _HomeScreen extends State<HomeScreen> {
+class _HighScoreState extends State<HighScore> {
   Function updateState(int index) {
     return () {
       // setState(() {
@@ -54,7 +51,7 @@ class _HomeScreen extends State<HomeScreen> {
           ),
         ),
         backgroundColor: Colors.transparent,
-        title: const Text('Home'),
+        title: const Text('High Score'),
       ),
       drawer: Drawer(
         child: Column(
