@@ -33,7 +33,7 @@ class _HighScoreState extends State<HighScore> {
       if (index == 4) {
         SystemNavigator.pop();
       }
-      // Navigator.pop(context);
+      Navigator.pop(context);
       Navigator.pushNamed(context, Defaults.navigationRoutes[index]);
     };
   }

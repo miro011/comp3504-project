@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-var indexClicked = 3;
+var indexClicked = 5;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
       if (index == 4) {
         SystemNavigator.pop();
       }
-      // Navigator.pop(context);
+      Navigator.pop(context);
       Navigator.pushNamed(context, Defaults.navigationRoutes[index]);
     };
   }

@@ -11,19 +11,24 @@ import 'package:term_project/screens/defaults.dart';
 import 'package:tuple/tuple.dart';
 
 
-void main() {
-  runApp(const MyApp());
+class MainScreen extends StatelessWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: MyApp(),
+    );
+  }
 }
 
 var indexClicked = 2;
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() {
-    return _MyAppState();
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -42,7 +47,7 @@ class _MyAppState extends State<MyApp> {
       if (index == 4) {
         SystemNavigator.pop();
       }
-      // Navigator.pop(context);
+      Navigator.pop(context);
       Navigator.pushNamed(context, Defaults.navigationRoutes[index]);
     };
   }
