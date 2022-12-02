@@ -33,8 +33,8 @@ class _SettingsState extends State<Settings> {
       if (index == 4) {
         SystemNavigator.pop();
       }
-      Navigator.pop(context);
-      Navigator.pushNamed(context, Defaults.navigationRoutes[index]);
+      // Navigator.pop(context);
+      Navigator.popAndPushNamed(context, Defaults.navigationRoutes[index]);
     };
   }
 

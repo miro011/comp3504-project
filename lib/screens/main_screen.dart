@@ -47,8 +47,8 @@ class _MyAppState extends State<MyApp> {
       if (index == 4) {
         SystemNavigator.pop();
       }
-      Navigator.pop(context);
-      Navigator.pushNamed(context, Defaults.navigationRoutes[index]);
+      // Navigator.pop(context);
+      Navigator.popAndPushNamed(context, Defaults.navigationRoutes[index]);
     };
   }
 
@@ -112,8 +112,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -211,8 +210,7 @@ class _MyAppState extends State<MyApp> {
           },
 
         ),
-      ),
-    );
+      );
   }
 
   Future _initLocationService() async {
