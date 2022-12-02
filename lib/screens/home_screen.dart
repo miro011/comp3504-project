@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:term_project/config/classes.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +14,14 @@ class Home extends StatelessWidget {
 
 var indexClicked = 0;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreen();
+  State<Home> createState() => _HomeState();
 }
 
-class _HomeScreen extends State<HomeScreen> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +72,7 @@ class _HomeScreen extends State<HomeScreen> {
           ],
         ),
       ),
+      body: const Center(child: Text('Home')),
     );
   }
 }

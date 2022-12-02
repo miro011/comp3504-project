@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:term_project/config/classes.dart';
-import 'package:term_project/config/defaults.dart';
 
 class HighScoreScreen extends StatelessWidget {
   const HighScoreScreen({Key? key}) : super(key: key);
@@ -25,19 +23,6 @@ class HighScore extends StatefulWidget {
 }
 
 class _HighScoreState extends State<HighScore> {
-  Function updateState(int index) {
-    return () {
-      // setState(() {
-      //   indexClicked = index;
-      // });
-      if (index == 4) {
-        SystemNavigator.pop();
-      }
-      // Navigator.pop(context);
-      Navigator.popAndPushNamed(context, Defaults.navigationRoutes[index]);
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +73,7 @@ class _HighScoreState extends State<HighScore> {
           ],
         ),
       ),
+      body: const Center(child: Text('HighScore')),
     );
   }
 }

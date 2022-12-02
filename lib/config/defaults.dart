@@ -15,6 +15,7 @@ class Defaults {
     'Exit',
     'Log In',
     'Register',
+    'About',
   ];
 
   /*
@@ -28,6 +29,7 @@ class Defaults {
     Icons.exit_to_app,
     Icons.login,
     Icons.app_registration,
+    Icons.info_outline,
   ];
 
   /*
@@ -35,11 +37,13 @@ class Defaults {
   * routes.dart file
   * */
   static const navigationRoutes = [
-    '/',
-    '/high_score',
-    '/map_screen',
-    '/settings_screen',
-    '/login_screen',
-    '/registration_screen',
+    '/', //[0]
+    '/high_score', //[1]
+    '/map_screen', //[2]
+    '/settings_screen', //[3]
+    '/exit_screen', //[4]Not really used, but just for consistency.
+    '/login_screen', //[5]
+    '/registration_screen', //[6]
+    '/about_screen', //[7]
   ];
 }
