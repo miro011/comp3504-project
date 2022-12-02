@@ -4,6 +4,9 @@ class Defaults {
   static const Color naviItemColor = Colors.blueGrey;
   static const Color naviItemSelectedColor = Colors.cyan;
 
+  /*
+  * Item text for the navigation drawer
+  * */
   static const naviItemText = [
     'Home',
     'High Score',
@@ -14,6 +17,9 @@ class Defaults {
     'Register',
   ];
 
+  /*
+  * Icons for the navigation drawer
+  * */
   static const naviItemIcon = [
     Icons.home,
     Icons.scoreboard,
@@ -24,6 +30,10 @@ class Defaults {
     Icons.app_registration,
   ];
 
+  /*
+  * This would be used to navigate between screens by using routing from the
+  * routes.dart file
+  * */
   static const navigationRoutes = [
     '/',
     '/high_score',

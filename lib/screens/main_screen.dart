@@ -3,13 +3,13 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
-import 'package:location_platform_interface/location_platform_interface.dart' as lpi;
-import 'package:term_project/screens/defaults.dart';
+import 'package:location_platform_interface/location_platform_interface.dart'
+    as lpi;
+import 'package:term_project/config/classes.dart';
+import 'package:term_project/config/defaults.dart';
 import 'package:tuple/tuple.dart';
-
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -62,9 +62,10 @@ class _MyAppState extends State<MyApp> {
     }
 
     if (loc.latitude != null && loc.longitude != null) {
-      recordedPositions.addLast(
-          Tuple2<double, double>(loc.latitude!, loc.longitude!));
-      print("Just recorded ${loc.latitude} ${loc.longitude} for a total of ${recordedPositions.length}");
+      recordedPositions
+          .addLast(Tuple2<double, double>(loc.latitude!, loc.longitude!));
+      print(
+          "Just recorded ${loc.latitude} ${loc.longitude} for a total of ${recordedPositions.length}");
     }
   }
 
@@ -88,129 +89,91 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     //initialize polygon
-    _polygon.add(
-        Polygon(
-          // given polygonId
-          polygonId: PolygonId('1'),
-          // initialize the list of points to display polygon
-          points: entireMapPoints,
-          //draws a hole in the Polygon
-          holes: calgaryPoints,
-          // given color to polygon
-          //fillColor: Colors.green,
-          fillColor: Colors.blueGrey.withOpacity(0.8),
-          // given border color to polygon
-          strokeColor: Colors.blueGrey,
-          geodesic: true,
-          // given width of border
-          strokeWidth: 4,
-        )
-
-    );
-
+    _polygon.add(Polygon(
+      // given polygonId
+      polygonId: PolygonId('1'),
+      // initialize the list of points to display polygon
+      points: entireMapPoints,
+      //draws a hole in the Polygon
+      holes: calgaryPoints,
+      // given color to polygon
+      //fillColor: Colors.green,
+      fillColor: Colors.blueGrey.withOpacity(0.8),
+      // given border color to polygon
+      strokeColor: Colors.blueGrey,
+      geodesic: true,
+      // given width of border
+      strokeWidth: 4,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/background/bg05.png'),
-                fit: BoxFit.cover,
-              ),
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background/bg05.png'),
+              fit: BoxFit.cover,
             ),
           ),
-          backgroundColor: Colors.transparent,
-          title: const Text('Explore The World'),
         ),
-        drawer: Drawer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage('assets/images/background/bg05.png'),
+        backgroundColor: Colors.transparent,
+        title: const Text('Explore The World'),
+      ),
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const HeaderDrawer(),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerTile(
+                    index: 0,
+                    clickState: indexClicked,
                   ),
-                ),
-                padding: const EdgeInsets.all(0),
-                child: Container(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const CircleAvatar(
-                        radius: 40,
-                        foregroundImage:
-                        AssetImage('assets/images/icons/app_icon.png'),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Globe Travela',
-                        style: GoogleFonts.acme(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
+                  DrawerTile(
+                    index: 1,
+                    clickState: indexClicked,
                   ),
-                ),
+                  DrawerTile(
+                    index: 2,
+                    clickState: indexClicked,
+                  ),
+                  DrawerTile(
+                    index: 3,
+                    clickState: indexClicked,
+                  ),
+                  DrawerTile(
+                    index: 4,
+                    clickState: indexClicked,
+                  ),
+                ],
               ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    DrawerTile(
-                      index: 0,
-                      onTap: () => updateState(0),
-                    ),
-                    DrawerTile(
-                      index: 1,
-                      onTap: () => updateState(1),
-                    ),
-                    DrawerTile(
-                      index: 2,
-                      onTap: () => updateState(2),
-                    ),
-                    DrawerTile(
-                      index: 3,
-                      onTap: () => updateState(3),
-                    ),
-                    DrawerTile(
-                      index: 4,
-                      onTap: () => updateState(4),
-                    ),
-                  ],
-                ),
+            ),
+          ],
+        ),
+      ),
+      body: currentPosition == null
+          ? const Text("Loading")
+          : GoogleMap(
+              // onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                    currentPosition!.latitude!, currentPosition!.longitude!),
+                zoom: 11.0,
               ),
-            ],
-          ),
-        ),
-        body: currentPosition == null
-            ? const Text("Loading")
-            : GoogleMap(
-          // onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(
-                currentPosition!.latitude!, currentPosition!.longitude!),
-            zoom: 11.0,
-          ),
-          myLocationEnabled: true,
-          polygons: _polygon,
+              myLocationEnabled: true,
+              polygons: _polygon,
 
-          onMapCreated: (GoogleMapController controller) {
-            mapController = controller;
-          },
-
-        ),
-      );
+              onMapCreated: (GoogleMapController controller) {
+                mapController = controller;
+              },
+            ),
+    );
   }
 
   Future _initLocationService() async {
@@ -253,23 +216,29 @@ class _MyAppState extends State<MyApp> {
 
   Set<Polygon> _polygon = HashSet<Polygon>();
 
-
   List<LatLng> entireMapPoints = [
-
-    LatLng(85,90),  LatLng(85,0.1),
-    LatLng(85,-90),  LatLng(85,-179.9),
-    LatLng(0,-179.9), LatLng(-85,-179.9),
-    LatLng(-85,-90),  LatLng(-85,0.1),
-    LatLng(-85,90),  LatLng(-85,179.9),
-    LatLng(0,179.9), LatLng(85,179.9),
+    LatLng(85, 90),
+    LatLng(85, 0.1),
+    LatLng(85, -90),
+    LatLng(85, -179.9),
+    LatLng(0, -179.9),
+    LatLng(-85, -179.9),
+    LatLng(-85, -90),
+    LatLng(-85, 0.1),
+    LatLng(-85, 90),
+    LatLng(-85, 179.9),
+    LatLng(0, 179.9),
+    LatLng(85, 179.9),
   ];
 
-  List<List<LatLng>>  calgaryPoints = [[
-
-    LatLng(51.183790624241, -114.2231309845041),  LatLng(51.183790624241, -113.86058216181912),
-    LatLng(50.85985482312287, -113.86058216181912),  LatLng(50.85985482312287, -114.2231309845041),
-
-  ]];
+  List<List<LatLng>> calgaryPoints = [
+    [
+      LatLng(51.183790624241, -114.2231309845041),
+      LatLng(51.183790624241, -113.86058216181912),
+      LatLng(50.85985482312287, -113.86058216181912),
+      LatLng(50.85985482312287, -114.2231309845041),
+    ]
+  ];
 }
 
 class MapPainter extends CustomPainter {
@@ -307,7 +276,7 @@ class MapLandmark {
   Position pos;
   late ScreenPoint screenPoint;
 
-  MapLandmark(this.pos){
+  MapLandmark(this.pos) {
     screenPoint = ScreenPoint();
   }
 }
@@ -316,40 +285,5 @@ class ScreenPoint {
   int x;
   int y;
 
-  ScreenPoint({this.x=0, this.y=0});
-}
-
-class DrawerTile extends StatelessWidget {
-  const DrawerTile({
-    Key? key,
-    required this.index,
-    required this.onTap,
-  }) : super(key: key);
-
-  final int index;
-  final Function onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        Defaults.naviItemIcon[index],
-        size: 35,
-        color: indexClicked == index
-            ? Defaults.naviItemSelectedColor
-            : Defaults.naviItemColor,
-      ),
-      title: Text(
-        Defaults.naviItemText[index],
-        style: GoogleFonts.acme(
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: indexClicked == index
-              ? Defaults.naviItemSelectedColor
-              : Defaults.naviItemColor,
-        ),
-      ),
-      onTap: onTap(),
-    );
-  }
+  ScreenPoint({this.x = 0, this.y = 0});
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:term_project/screens/defaults.dart';
+import 'package:term_project/config/defaults.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return const MaterialApp(
       home: Login(),
       debugShowCheckedModeBanner: false,
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
                     const CircleAvatar(
                       radius: 40,
                       foregroundImage:
-                      AssetImage('assets/images/icons/app_icon.png'),
+                          AssetImage('assets/images/icons/app_icon.png'),
                     ),
                     const SizedBox(
                       height: 10,

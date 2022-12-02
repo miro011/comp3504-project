@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:term_project/screens/defaults.dart';
+import 'package:term_project/config/defaults.dart';
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -74,7 +74,7 @@ class _RegistrationState extends State<Registration> {
                     const CircleAvatar(
                       radius: 40,
                       foregroundImage:
-                      AssetImage('assets/images/icons/app_icon.png'),
+                          AssetImage('assets/images/icons/app_icon.png'),
                     ),
                     const SizedBox(
                       height: 10,

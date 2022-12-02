@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:term_project/routes/routes.dart';
+import 'package:term_project/config/routes.dart';
 /*
 * This is the file that is the root for my code.
 * Change the initialRoute to any of the following to set the default screen the app loads
