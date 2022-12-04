@@ -22,9 +22,6 @@ class _MyAppState extends State<MyApp> {
   var recordedPositions = Queue<Tuple2<double, double>>();
   static const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
 
-  Set<Marker> _markers = HashSet<Marker>();
-  int _markerIdCounter = 1;
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -78,9 +75,7 @@ class _MyAppState extends State<MyApp> {
           // given width of border
           strokeWidth: 4,
         )
-
     );
-
   }
 
   @override
@@ -97,7 +92,7 @@ class _MyAppState extends State<MyApp> {
           // onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: LatLng(
-                currentPosition!.latitude!, currentPosition!.longitude!),
+                currentPosition!.latitude, currentPosition!.longitude),
             zoom: 11.0,
           ),
           myLocationEnabled: true,
@@ -135,85 +130,21 @@ class _MyAppState extends State<MyApp> {
     print("${loc.latitude} ${loc.longitude}");
   }
 
-  void _setMarkers(LatLng point) {
-    final String markerIdVal = 'marker_id_$_markerIdCounter';
-    _markerIdCounter++;
-    setState(() {
-      print(
-          'Marker | Latitude: ${point.latitude}  Longitude: ${point.longitude}');
-      _markers.add(
-        Marker(
-          markerId: MarkerId(markerIdVal),
-          position: point,
-        ),
-      );
-    });
-  }
-
   Set<Polygon> _polygon = HashSet<Polygon>();
 
-
   List<LatLng> entireMapPoints = [
-
-   LatLng(85,90),  LatLng(85,0.1),
-   LatLng(85,-90),  LatLng(85,-179.9),
-   LatLng(0,-179.9), LatLng(-85,-179.9),
-   LatLng(-85,-90),  LatLng(-85,0.1),
-  LatLng(-85,90),  LatLng(-85,179.9),
-   LatLng(0,179.9), LatLng(85,179.9),
+    LatLng(85, 90), LatLng(85, 0.1),
+    LatLng(85, -90), LatLng(85, -179.9),
+    LatLng(0, -179.9), LatLng(-85, -179.9),
+    LatLng(-85, -90), LatLng(-85, 0.1),
+    LatLng(-85, 90), LatLng(-85, 179.9),
+    LatLng(0, 179.9), LatLng(85, 179.9),
   ];
 
-  List<List<LatLng>>  calgaryPoints = [[
-
-    LatLng(51.183790624241, -114.2231309845041),  LatLng(51.183790624241, -113.86058216181912),
-    LatLng(50.85985482312287, -113.86058216181912),  LatLng(50.85985482312287, -114.2231309845041),
-
+  List<List<LatLng>> calgaryPoints = [[
+    LatLng(51.183790624241, -114.2231309845041),
+    LatLng(51.183790624241, -113.86058216181912),
+    LatLng(50.85985482312287, -113.86058216181912),
+    LatLng(50.85985482312287, -114.2231309845041),
   ]];
-}
-
-class MapPainter extends CustomPainter {
-  final Map<String, MapLandmark> landmarksMap;
-  late Paint p;
-  bool debugPaint = false;
-
-  MapPainter(this.landmarksMap) {
-    p = Paint()
-      ..strokeWidth = 5.0
-      ..color = Colors.orange
-      ..style = PaintingStyle.stroke;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (landmarksMap != null && landmarksMap.length > 0) {
-      landmarksMap.forEach((id, value) {
-        canvas.drawCircle(
-            Offset(
-                value.screenPoint.x.toDouble(), value.screenPoint.y.toDouble()),
-            8,
-            p);
-      });
-    } else {
-      canvas.drawCircle(Offset(70, 70), 25, p);
-    }
-  } //paint()
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-class MapLandmark {
-  Position pos;
-  late ScreenPoint screenPoint;
-
-  MapLandmark(this.pos){
-    screenPoint = ScreenPoint();
-  }
-}
-
-class ScreenPoint {
-  int x;
-  int y;
-
-  ScreenPoint({this.x=0, this.y=0});
 }
