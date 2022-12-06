@@ -12,88 +12,27 @@ import 'package:term_project/Globals.dart' as globals;
 ////////////////////////////////////////////////////////////////////////////////
 
 class MyAppState extends State<MyApp> {
+
+  //............................................................................
+
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  var RECORDDED_POSITIONS = Queue<Tuple2<double, double>>();
+  var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
+  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>();
 
-  void _recordPosition(locations.LocationData loc) {
-    if (RECORDDED_POSITIONS.length >= globals.MAX_RECORDED_POSITIONS_IN_MEMORY) {
-      RECORDDED_POSITIONS.removeFirst();
-    }
+  //............................................................................
 
-    if (loc.latitude != null && loc.longitude != null) {
-      RECORDDED_POSITIONS.addLast(
-          Tuple2<double, double>(loc.latitude!, loc.longitude!));
-      print("Just recorded ${loc.latitude} ${loc.longitude} for a total of ${RECORDDED_POSITIONS.length}");
-    }
-  }
-
-  void getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    setState(() {
-      CURRENT_POSITION = position;
-    });
-  }
-
+  // Called only once when an instance of this class is created
   @override
   void initState() {
-    //sets camera at current location
-    getCurrentLocation();
-    _initLocationService();
-
     super.initState();
-
-    //initialize polygon
-    _polygon.add(
-        Polygon(
-          // given polygonId
-          polygonId: PolygonId('1'),
-          // initialize the list of points to display polygon
-          points: globals.ENTIRE_MAP_POINTS,
-          //draws a hole in the Polygon
-          holes: globals.CALGARY_POINTS,
-          // given color to polygon
-          //fillColor: Colors.green,
-          fillColor: Colors.blueGrey.withOpacity(0.8),
-          // given border color to polygon
-          strokeColor: Colors.blueGrey,
-          geodesic: true,
-          // given width of border
-          strokeWidth: 4,
-        )
-    );
+    _initLocationService();
+    _POLYGONS_SET.add(globals.MAIN_POLYGON);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Maps Sample App'),
-          backgroundColor: Colors.green[700],
-        ),
-        body: CURRENT_POSITION == null
-            ? const Text("Loading")
-            : GoogleMap(
-          onMapCreated: (GoogleMapController mc) => MAP_CONTROLLER = mc,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(
-                CURRENT_POSITION!.latitude, CURRENT_POSITION!.longitude),
-            zoom: 11.0,
-          ),
-          myLocationEnabled: true,
-          polygons: _polygon,
-        ),
-      ),
-    );
-  }
-
-  Future _initLocationService() async {
+  // "Future" not needed as we will not await this function
+  void _initLocationService() async {
     var location = locations.Location();
-
-    location.onLocationChanged.listen(_recordPosition);
 
     if (!await location.serviceEnabled()) {
       if (!await location.requestService()) {
@@ -109,9 +48,59 @@ class MyAppState extends State<MyApp> {
       }
     }
 
-    var loc = await location.getLocation();
-    print("${loc.latitude} ${loc.longitude}");
+    location.onLocationChanged.listen(_onLocationChangedHandler);
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() => CURRENT_POSITION = position); // re-runs the build method
+
+    //var loc = await location.getLocation();
+    //print("${loc.latitude} ${loc.longitude}");
   }
 
-  Set<Polygon> _polygon = HashSet<Polygon>();
+  void _onLocationChangedHandler(locations.LocationData loc) {
+    // Regulate RECORDED_POSITIONS size
+    if (RECORDED_POSITIONS.length >= globals.MAX_RECORDED_POSITIONS_IN_MEMORY) {
+      RECORDED_POSITIONS.removeFirst();
+    }
+
+    // Save location
+    if (loc.latitude != null && loc.longitude != null) {
+      RECORDED_POSITIONS.addLast(
+          Tuple2<double, double>(loc.latitude!, loc.longitude!));
+      print("Just recorded ${loc.latitude} ${loc.longitude} for a total of ${RECORDED_POSITIONS.length}");
+    }
+  }
+
+  //............................................................................
+
+  // Called automatically when state changes (setState())
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: buildAppBar(),
+        // if/else to show that the map is loading until initState() is done
+        body: CURRENT_POSITION == null  ? const Text("Loading") : buildGoogleMap(),
+      ),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: const Text('Maps Sample App'),
+      backgroundColor: Colors.green[700],
+    );
+  }
+
+  GoogleMap buildGoogleMap() {
+    return GoogleMap(
+      onMapCreated: (GoogleMapController mc) => MAP_CONTROLLER = mc,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(CURRENT_POSITION!.latitude, CURRENT_POSITION!.longitude),
+        zoom: 11.0,
+      ),
+      myLocationEnabled: true,
+      polygons: _POLYGONS_SET,
+    );
+  }
 }
