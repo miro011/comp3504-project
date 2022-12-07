@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,7 +19,8 @@ class MyAppState extends State<MyApp> {
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
   var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
-  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>();
+  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
+  int POLYGON_ID_COUNTER = 1;
 
   //............................................................................
 
@@ -58,18 +60,79 @@ class MyAppState extends State<MyApp> {
   }
 
   void _onLocationChangedHandler(locations.LocationData loc) {
-    // Regulate RECORDED_POSITIONS size
-    if (RECORDED_POSITIONS.length >= globals.MAX_RECORDED_POSITIONS_IN_MEMORY) {
-      RECORDED_POSITIONS.removeFirst();
+    if (loc.latitude == null || loc.longitude == null) return;
+    double lat = loc.latitude ?? 0.0;
+    double long = loc.longitude ?? 0.0;
+
+    double xMin = long - globals.LIGHT_DISTANCE_X;
+    double xMax = long + globals.LIGHT_DISTANCE_X;
+    double yMin = lat - globals.LIGHT_DISTANCE_Y;
+    double yMax = lat + globals.LIGHT_DISTANCE_Y;
+
+    print("********************************************");
+    print(_POLYGONS_SET.first.holes.length);
+    print(xMin.toString() + " " + xMax.toString() + " " + yMin.toString() + " " + yMax.toString());
+    print("********************************************");
+
+    for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
+      bool xMatch = false;
+      bool yMatch = false;
+
+      double targetXMin = holeData[0].longitude;
+      double targetXMax = holeData[1].longitude;
+      double targetYMin = holeData[2].latitude;
+      double targetYMax = holeData[0].latitude;
+
+      print("////////////////////////////////////////////");
+      print(targetXMin.toString() + " " + targetXMax.toString() + " " + targetYMin.toString() + " " + targetYMax.toString());
+      print("////////////////////////////////////////////");
+
+      for (double x in [xMin, xMax]) {
+        if (x >= targetXMin && x <= targetXMax) xMatch = true;
+      }
+      for (double y in [yMin, yMax]) {
+        if (y >= targetYMin && y <= targetYMax) yMatch = true;
+      }
+
+      if (xMatch == true && yMatch == true) {
+        return;
+      } // collision detected
     }
 
-    // Save location
-    if (loc.latitude != null && loc.longitude != null) {
-      RECORDED_POSITIONS.addLast(
-          Tuple2<double, double>(loc.latitude!, loc.longitude!));
-      print("Just recorded ${loc.latitude} ${loc.longitude} for a total of ${RECORDED_POSITIONS.length}");
-    }
+    replaceMainPolygonAndAddNewHole([
+      LatLng(yMax, xMin),
+      LatLng(yMax, xMax),
+      LatLng(yMin, xMax),
+      LatLng(yMin, xMin),
+    ]);
+
+    POLYGON_ID_COUNTER += 1;
+
+    print("............................................");
+    print("added");
+    print("............................................");
+
+    setState((){});
   }
+
+  // given the new hole it redoes the entire polygon so that it shows up in google maps
+  void replaceMainPolygonAndAddNewHole (List<LatLng> hole) {
+    List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
+    holes.add(hole);
+    _POLYGONS_SET.remove(_POLYGONS_SET.first);
+    _POLYGONS_SET.add(
+        Polygon(
+          polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
+          points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
+          holes: holes, // draws a hole in the Polygon
+          fillColor: Colors.blueGrey.withOpacity(0.8),
+          strokeColor: Colors.blueGrey, // border color to polygon
+          strokeWidth: 0, // width of border
+          geodesic: true,
+        )
+    );
+  }
+
 
   //............................................................................
 
