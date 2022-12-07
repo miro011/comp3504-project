@@ -64,10 +64,10 @@ class MyAppState extends State<MyApp> {
     double lat = loc.latitude ?? 0.0;
     double long = loc.longitude ?? 0.0;
 
-    double xMin = long - globals.LIGHT_DISTANCE;
-    double xMax = long + globals.LIGHT_DISTANCE;
-    double yMin = lat - globals.LIGHT_DISTANCE;
-    double yMax = lat + globals.LIGHT_DISTANCE;
+    double xMin = long - globals.LIGHT_DISTANCE_X;
+    double xMax = long + globals.LIGHT_DISTANCE_X;
+    double yMin = lat - globals.LIGHT_DISTANCE_Y;
+    double yMax = lat + globals.LIGHT_DISTANCE_Y;
 
     print("********************************************");
     print(_POLYGONS_SET.first.holes.length);
@@ -127,7 +127,7 @@ class MyAppState extends State<MyApp> {
           holes: holes, // draws a hole in the Polygon
           fillColor: Colors.blueGrey.withOpacity(0.8),
           strokeColor: Colors.blueGrey, // border color to polygon
-          strokeWidth: 4, // width of border
+          strokeWidth: 0, // width of border
           geodesic: true,
         )
     );
