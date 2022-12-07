@@ -1,19 +1,20 @@
 import 'dart:collection';
-import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
-import 'package:location_platform_interface/location_platform_interface.dart' as lpi;
+import 'package:location_platform_interface/location_platform_interface.dart'
+    as lpi;
+import 'package:term_project/Globals.dart' as globals;
+import 'package:term_project/MyApp.dart';
+import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
 
-import 'package:term_project/MyApp.dart';
-import 'package:term_project/Globals.dart' as globals;
-
 ////////////////////////////////////////////////////////////////////////////////
+var indexClicked = 2;
 
 class MyAppState extends State<MyApp> {
-
   //............................................................................
 
   late GoogleMapController MAP_CONTROLLER;
@@ -52,7 +53,8 @@ class MyAppState extends State<MyApp> {
 
     location.onLocationChanged.listen(_onLocationChangedHandler);
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() => CURRENT_POSITION = position); // re-runs the build method
 
     //var loc = await location.getLocation();
@@ -71,7 +73,13 @@ class MyAppState extends State<MyApp> {
 
     print("********************************************");
     print(_POLYGONS_SET.first.holes.length);
-    print(xMin.toString() + " " + xMax.toString() + " " + yMin.toString() + " " + yMax.toString());
+    print(xMin.toString() +
+        " " +
+        xMax.toString() +
+        " " +
+        yMin.toString() +
+        " " +
+        yMax.toString());
     print("********************************************");
 
     for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
@@ -84,7 +92,13 @@ class MyAppState extends State<MyApp> {
       double targetYMax = holeData[0].latitude;
 
       print("////////////////////////////////////////////");
-      print(targetXMin.toString() + " " + targetXMax.toString() + " " + targetYMin.toString() + " " + targetYMax.toString());
+      print(targetXMin.toString() +
+          " " +
+          targetXMax.toString() +
+          " " +
+          targetYMin.toString() +
+          " " +
+          targetYMax.toString());
       print("////////////////////////////////////////////");
 
       for (double x in [xMin, xMax]) {
@@ -112,46 +126,85 @@ class MyAppState extends State<MyApp> {
     print("added");
     print("............................................");
 
-    setState((){});
+    setState(() {});
   }
 
   // given the new hole it redoes the entire polygon so that it shows up in google maps
-  void replaceMainPolygonAndAddNewHole (List<LatLng> hole) {
+  void replaceMainPolygonAndAddNewHole(List<LatLng> hole) {
     List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
     holes.add(hole);
     _POLYGONS_SET.remove(_POLYGONS_SET.first);
-    _POLYGONS_SET.add(
-        Polygon(
-          polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
-          points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
-          holes: holes, // draws a hole in the Polygon
-          fillColor: Colors.blueGrey.withOpacity(0.8),
-          strokeColor: Colors.blueGrey, // border color to polygon
-          strokeWidth: 0, // width of border
-          geodesic: true,
-        )
-    );
+    _POLYGONS_SET.add(Polygon(
+      polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
+      points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
+      holes: holes, // draws a hole in the Polygon
+      fillColor: Colors.blueGrey.withOpacity(0.8),
+      strokeColor: Colors.blueGrey, // border color to polygon
+      strokeWidth: 0, // width of border
+      geodesic: true,
+    ));
   }
-
 
   //............................................................................
 
   // Called automatically when state changes (setState())
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: buildAppBar(),
-        // if/else to show that the map is loading until initState() is done
-        body: CURRENT_POSITION == null  ? const Text("Loading") : buildGoogleMap(),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background/bg05.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        title: const Text('Explore!'),
       ),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      title: const Text('Maps Sample App'),
-      backgroundColor: Colors.green[700],
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const HeaderDrawer(),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  //Home
+                  DrawerTile(
+                    index: 0,
+                    clickState: indexClicked,
+                  ),
+                  //High Score
+                  DrawerTile(
+                    index: 1,
+                    clickState: indexClicked,
+                  ),
+                  //Map Screen
+                  DrawerTile(
+                    index: 2,
+                    clickState: indexClicked,
+                  ),
+                  //Settings
+                  DrawerTile(
+                    index: 3,
+                    clickState: indexClicked,
+                  ),
+                  //Exit
+                  DrawerTile(
+                    index: 4,
+                    clickState: indexClicked,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      // if/else to show that the map is loading until initState() is done
+      body: CURRENT_POSITION == null ? const Text("Loading") : buildGoogleMap(),
     );
   }
 

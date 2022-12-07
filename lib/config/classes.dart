@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:term_project/config/defaults.dart';
+import 'package:term_project/Globals.dart';
 
 /*
 * Make sure you import this dart file if you want to reuse the classes coded here
@@ -73,29 +73,27 @@ class HeaderDrawer extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(0),
-      child: Container(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          const CircleAvatar(
+            radius: 40,
+            foregroundImage: AssetImage('assets/images/icons/app_icon.png'),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Globe Travela',
+            style: GoogleFonts.acme(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.w400,
             ),
-            const CircleAvatar(
-              radius: 40,
-              foregroundImage: AssetImage('assets/images/icons/app_icon.png'),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Globe Travela',
-              style: GoogleFonts.acme(
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

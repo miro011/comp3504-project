@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:term_project/MyApp.dart';
 import 'package:term_project/screens/about_screen.dart';
-// import 'package:term_project/main.dart';
 import 'package:term_project/screens/home_screen.dart';
 import 'package:term_project/screens/login_screen.dart';
-import 'package:term_project/screens/main_screen.dart';
 
 import '../screens/high_score.dart';
 import '../screens/registration_screen.dart';
