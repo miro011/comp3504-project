@@ -24,7 +24,7 @@ List<List<LatLng>> CALGARY_POINTS = [[
 Polygon MAIN_POLYGON = Polygon(
   polygonId: PolygonId('1'),
   points: ENTIRE_MAP_POINTS, // list of points to display polygon
-  //holes: CALGARY_POINTS, // draws a hole in the Polygon
+  holes: [], // draws a hole in the Polygon
   fillColor: Colors.blueGrey.withOpacity(0.8),
   strokeColor: Colors.blueGrey, // border color to polygon
   strokeWidth: 4, // width of border

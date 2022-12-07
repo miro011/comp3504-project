@@ -19,8 +19,7 @@ class MyAppState extends State<MyApp> {
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
   var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
-  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>();
-  int POLYGON_ID_COUNTER = 2; // 1 being the main one
+  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
 
   //............................................................................
 
@@ -29,7 +28,7 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initLocationService();
-    //_POLYGONS_SET.add(globals.MAIN_POLYGON);
+    _POLYGONS_SET.add(globals.MAIN_POLYGON);
   }
 
   // "Future" not needed as we will not await this function
@@ -64,27 +63,24 @@ class MyAppState extends State<MyApp> {
     double lat = loc.latitude ?? 0.0;
     double long = loc.longitude ?? 0.0;
 
-    // remove negative values
-    lat += 90;
-    long += 180;
-
     double xMin = long - globals.LIGHT_DISTANCE;
     double xMax = long + globals.LIGHT_DISTANCE;
     double yMin = lat - globals.LIGHT_DISTANCE;
     double yMax = lat + globals.LIGHT_DISTANCE;
 
     print("********************************************");
+    print(_POLYGONS_SET.first.holes.length);
     print(xMin.toString() + " " + xMax.toString() + " " + yMin.toString() + " " + yMax.toString());
     print("********************************************");
 
-    for (Polygon poly in _POLYGONS_SET) {
+    for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
       bool xMatch = false;
       bool yMatch = false;
 
-      double targetXMin = poly.holes[0][1].longitude + 180;
-      double targetXMax = poly.holes[0][0].longitude + 180;
-      double targetYMin = poly.holes[0][2].latitude + 90;
-      double targetYMax = poly.holes[0][0].latitude + 90;
+      double targetXMin = holeData[0].longitude;
+      double targetXMax = holeData[1].longitude;
+      double targetYMin = holeData[2].latitude;
+      double targetYMax = holeData[0].latitude;
 
       print("////////////////////////////////////////////");
       print(targetXMin.toString() + " " + targetXMax.toString() + " " + targetYMin.toString() + " " + targetYMax.toString());
@@ -98,38 +94,24 @@ class MyAppState extends State<MyApp> {
       }
 
       if (xMatch == true && yMatch == true) {
-        print("............................................");
-        print("exists");
-        print("............................................");
         return;
       } // collision detected
     }
 
-    addPolygon([[
-      LatLng(yMax-90, xMax-180),
-      LatLng(yMax-90, xMin-180),
-      LatLng(yMin-90, xMax-180),
-      LatLng(yMin-90, xMin-180),
-    ]]);
+    _POLYGONS_SET.first.holes.add([
+      LatLng(yMax, xMin),
+      LatLng(yMax, xMax),
+      LatLng(yMin, xMax),
+      LatLng(yMin, xMin),
+    ]);
+
+    print("............................................");
+    print("added");
+    print("............................................");
+
+    setState((){});
   }
 
-  void addPolygon(List<List<LatLng>> holes) {
-    _POLYGONS_SET.add(
-        Polygon(
-          polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
-          points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
-          holes: holes, // draws a hole in the Polygon
-          fillColor: Colors.blueGrey.withOpacity(0.8),
-          strokeColor: Colors.blueGrey, // border color to polygon
-          strokeWidth: 4, // width of border
-          geodesic: true,
-        )
-    );
-
-    POLYGON_ID_COUNTER += 1;
-
-    setState((){}); // re-runs the build method
-  }
 
   //............................................................................
 
