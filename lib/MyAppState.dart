@@ -20,6 +20,7 @@ class MyAppState extends State<MyApp> {
   Position? CURRENT_POSITION;
   var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
+  int POLYGON_ID_COUNTER = 1;
 
   //............................................................................
 
@@ -98,18 +99,38 @@ class MyAppState extends State<MyApp> {
       } // collision detected
     }
 
-    _POLYGONS_SET.first.holes.add([
+    replaceMainPolygonAndAddNewHole([
       LatLng(yMax, xMin),
       LatLng(yMax, xMax),
       LatLng(yMin, xMax),
       LatLng(yMin, xMin),
     ]);
 
+    POLYGON_ID_COUNTER += 1;
+
     print("............................................");
     print("added");
     print("............................................");
 
     setState((){});
+  }
+
+  // given the new hole it redoes the entire polygon so that it shows up in google maps
+  void replaceMainPolygonAndAddNewHole (List<LatLng> hole) {
+    List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
+    holes.add(hole);
+    _POLYGONS_SET.remove(_POLYGONS_SET.first);
+    _POLYGONS_SET.add(
+        Polygon(
+          polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
+          points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
+          holes: holes, // draws a hole in the Polygon
+          fillColor: Colors.blueGrey.withOpacity(0.8),
+          strokeColor: Colors.blueGrey, // border color to polygon
+          strokeWidth: 4, // width of border
+          geodesic: true,
+        )
+    );
   }
 
 
