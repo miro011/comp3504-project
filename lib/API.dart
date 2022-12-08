@@ -45,4 +45,9 @@ class API {
     developer.log('Getting highscores', name: 'API');
     return Future.value({'User A': 100, 'User B': 200, 'User C': 300});
   }
+
+  static Future<int> getExploredCount() {
+    developer.log("Getting number of explored points", name: 'API');
+    return Future.value(10);
+  }
 }
