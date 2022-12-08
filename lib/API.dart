@@ -11,8 +11,18 @@ import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
 import 'dart:developer' as developer;
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class API {
+  static Future<String> getDeviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    print('Running on ${androidInfo.id}');
+    return androidInfo.id;
+  }
+
   /// Return a list of all explored points from the DB.
   ///
   static Future<List<LatLng>> getExplored() {
