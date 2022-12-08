@@ -265,7 +265,7 @@ class MyAppState extends State<MyApp> {
         ),
       ),
       // if/else to show that the map is loading until initState() is done
-      body: CURRENT_POSITION == null ? const Text("Loading") : buildGoogleMap(),
+      body: CURRENT_POSITION == null ? const Center(child:Text("Loading")) : buildGoogleMap(),
     );
   }
 
