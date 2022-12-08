@@ -11,6 +11,8 @@ import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:developer' as developer;
+import 'API.dart';
 
 ////////////////////////////////////////////////////////////////////////////////
 var indexClicked = 2;
@@ -21,6 +23,7 @@ class MyAppState extends State<MyApp> {
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
   var LOCALLY_RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
+  List<LatLng> EXPLORED_POSITIONS = [];
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
 
@@ -33,7 +36,17 @@ class MyAppState extends State<MyApp> {
     _initLocationService();
     _POLYGONS_SET.add(globals.MAIN_POLYGON);
     _getDeviceInfo();
+    fetchExploredPositions();
+  }
 
+  void fetchExploredPositions() {
+    API.getExplored().then((explored) {
+      developer.log("Fetched explored positions ${explored.length}");
+      EXPLORED_POSITIONS = explored;
+      EXPLORED_POSITIONS.forEach((p) {
+        addHole(p.latitude, p.longitude);
+      });
+    });
   }
 
   void _getDeviceInfo() async {
@@ -75,8 +88,12 @@ class MyAppState extends State<MyApp> {
     double lat = loc.latitude ?? 0.0;
     double long = loc.longitude ?? 0.0;
 
-    LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
+    addHole(lat, long);
 
+    LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
+  }
+
+  void addHole(double lat, double long) {
     double xMin = long - globals.LIGHT_DISTANCE_X;
     double xMax = long + globals.LIGHT_DISTANCE_X;
     double yMin = lat - globals.LIGHT_DISTANCE_Y;

@@ -22,7 +22,7 @@ class API {
         Duration(seconds: 2),
             () =>
         [
-          LatLng(10.0, 10.0),
+          LatLng(51.0556, -114.0703),
           LatLng(11.0, 11.0),
           LatLng(12.0, 12.0),
           LatLng(13.0, 13.0),
