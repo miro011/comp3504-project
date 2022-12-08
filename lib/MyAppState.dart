@@ -93,9 +93,6 @@ class MyAppState extends State<MyApp> {
     if (newHole != null) {
       replaceMainPolygonAndAddNewHole(newHole);
       LOCALLY_RECORDED_POSITIONS[DateTime.now()] = newHole;
-      print("Received a new location  and drew a square ${newHole}");
-    } else {
-      print("Received a new location but it overlaps with an existing square");
     }
 
     if (!savingToServer &&
