@@ -31,8 +31,8 @@ class API {
 
     developer.log('Getting explored areas', name: 'API');
 
-    // final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
-    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
+    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
+    // final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
 
     if (resp.statusCode != 200) {
       developer.log("Invalid response from API, ${resp.statusCode}:${resp.body}");
