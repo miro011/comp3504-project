@@ -56,9 +56,9 @@ class API {
 
   /// Add these points to the API
   /// Returns true if it was successful, false otherwise
-  static Future<bool> addExplored(List<LatLng> newExplored) {
+  static Future<bool> addExplored(Map<DateTime, List<LatLng>> newExplored) {
     developer.log('Adding explored areas', name: 'API');
-    return Future.value(true);
+    return Future.value(false);
   }
 
   static Future<Map<String, int>> getHighscores() {
