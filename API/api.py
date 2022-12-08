@@ -99,6 +99,36 @@ def get_holes():
         return "internal error with the API"
 
 
+@APP.route('/highscores/', methods=['GET'])
+def get_highscores():
+    request.args
+
+    sql_statement = ""
+    statement_data = []
+
+    # list of all items
+    if len(request.args) == 0:
+        sql_statement = "select count(id) as num_holes, deviceID from holes group by deviceID order by num_holes"
+
+    elif len(request.args) == 1:
+        if "deviceID" not in request.args:
+            return "holes can only be searched using their deviceID"
+        else:
+            sql_statement = "select count(id) as num_holes, deviceID from holes where deviceID=\"%s\" group by deviceID order by num_holes"
+            statement_data.append(request.args['deviceID'])
+
+    else:
+        return "Only 1 argument expected"
+
+    # RESPONSE
+    response = talk_to_db(sql_statement, statement_data)
+    if talk_to_db_success(response):
+        return jsonify(response)
+    else:
+        print(response)
+        return "internal error with the API"
+
+
 def connect_to_db():
     global DB
 
