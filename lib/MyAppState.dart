@@ -23,7 +23,7 @@ class MyAppState extends State<MyApp> {
 
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  var LOCALLY_RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
+  Map<DateTime, List<LatLng>> LOCALLY_RECORDED_POSITIONS = {};
   List<List<LatLng>> EXPLORED_POSITIONS = [];
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
@@ -81,38 +81,38 @@ class MyAppState extends State<MyApp> {
     double lat = loc.latitude ?? 0.0;
     double long = loc.longitude ?? 0.0;
 
-    addHole(lat, long);
-
-    LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
+    var newHole = calcHole(LatLng(lat, long));
+    if (newHole != null) {
+      replaceMainPolygonAndAddNewHole(newHole);
+      LOCALLY_RECORDED_POSITIONS[DateTime.now()] = newHole;
+      print("Received a new location  and drew a square ${newHole}");
+    } else {
+      print("Received a new location but it overlaps with an existing square");
+    }
 
     if (!savingToServer &&
         LOCALLY_RECORDED_POSITIONS.length >=
             globals.server_location_send_size) {
-      List<LatLng> points = [];
-
-      LOCALLY_RECORDED_POSITIONS.forEach((point) {
-        points.add(LatLng(point.item1, point.item2));
-      });
 
       savingToServer = true;
 
-      API.addExplored(points).then((resp) {
+      API.addExplored(LOCALLY_RECORDED_POSITIONS).then((resp) {
         print("Received response from server for adding points ${resp}");
         savingToServer = false;
         if (resp) {
           LOCALLY_RECORDED_POSITIONS.clear();
           fetchExploredPositions();
         }
-        print("Local points is now ${LOCALLY_RECORDED_POSITIONS.length}");
+        print("Local points is now ${LOCALLY_RECORDED_POSITIONS.length} in length");
       });
     }
   }
 
-  void addHole(double lat, double long) {
-    double xMin = long - globals.LIGHT_DISTANCE_X;
-    double xMax = long + globals.LIGHT_DISTANCE_X;
-    double yMin = lat - globals.LIGHT_DISTANCE_Y;
-    double yMax = lat + globals.LIGHT_DISTANCE_Y;
+  List<LatLng>? calcHole(LatLng pos) {
+    double xMin = pos.longitude - globals.LIGHT_DISTANCE_X;
+    double xMax = pos.longitude + globals.LIGHT_DISTANCE_X;
+    double yMin = pos.latitude - globals.LIGHT_DISTANCE_Y;
+    double yMax = pos.latitude + globals.LIGHT_DISTANCE_Y;
 
     // print("********************************************");
     // print(_POLYGONS_SET.first.holes.length);
@@ -152,16 +152,9 @@ class MyAppState extends State<MyApp> {
       }
 
       if (xMatch == true && yMatch == true) {
-        return;
+        return null;
       } // collision detected
     }
-
-    replaceMainPolygonAndAddNewHole([
-      LatLng(yMax, xMin),
-      LatLng(yMax, xMax),
-      LatLng(yMin, xMax),
-      LatLng(yMin, xMin),
-    ]);
 
     POLYGON_ID_COUNTER += 1;
 
@@ -169,7 +162,12 @@ class MyAppState extends State<MyApp> {
     // print("added");
     // print("............................................");
 
-    setState(() {});
+    return [
+      LatLng(yMax, xMin),
+      LatLng(yMax, xMax),
+      LatLng(yMin, xMax),
+      LatLng(yMin, xMin),
+    ];
   }
 
   void recreateHoles() {
@@ -193,8 +191,8 @@ class MyAppState extends State<MyApp> {
       EXPLORED_POSITIONS.forEach((p) {
         replaceMainPolygonAndAddNewHole(p);
       });
-      LOCALLY_RECORDED_POSITIONS.forEach((p) {
-        addHole(p.item1, p.item2);
+      LOCALLY_RECORDED_POSITIONS.forEach((datetime, hole) {
+          replaceMainPolygonAndAddNewHole(hole);
       });
     });
   }
