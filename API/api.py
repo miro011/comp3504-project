@@ -99,6 +99,44 @@ def get_holes():
         return "internal error with the API"
 
 
+# http://127.0.0.1:80/holes/
+# example:
+# {
+#     "deviceID": "ABc1-396",
+#     "coordOneX": "53.01",
+#     "coordOneY": "-113.78857",
+#     "coordTwoX": "54.01",
+#     "coordTwoY": "-113.76805",
+#     "coordThreeX": "55.01",
+#     "coordThreeY": "-113.7683",
+#     "coordFourX": "56.01",
+#     "coordFourY": "-113.7617"
+
+# }
+
+@APP.route('/holes/', methods=['POST'])
+def add_new_hole():
+    argsDict = request.get_json()
+    stip_dict(argsDict)
+
+    result = arguments_validation(argsDict, ["deviceID", "coordOneX", "coordOneY", "coordTwoX",
+                                  "coordTwoY", "coordThreeX", "coordThreeY", "coordFourX", "coordFourY"])
+    if result != "success":
+        return result
+    print(result)
+    # return f"Add item {argsDict} using database operations"
+    prepedStatementStr = "INSERT INTO holes (deviceID, coordOneX, coordOneY, coordTwoX, coordTwoY, coordThreeX, coordThreeY, coordFourX, coordFourY) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    valuesArr = [argsDict["deviceID"], argsDict["coordOneX"],
+                 argsDict["coordOneY"], argsDict["coordTwoX"], argsDict["coordTwoY"], argsDict["coordThreeX"], argsDict["coordThreeY"], argsDict["coordFourX"], argsDict["coordFourY"]]
+    response = talk_to_db(prepedStatementStr, valuesArr)
+
+    if talk_to_db_success(response):
+        return jsonify(success=True)
+    else:
+        print(response)
+        return "internal error with the API"
+
+
 @APP.route('/highscores/', methods=['GET'])
 def get_highscores():
     request.args
@@ -124,9 +162,7 @@ def get_highscores():
     response = talk_to_db(sql_statement, statement_data)
     if talk_to_db_success(response):
         return jsonify(response)
-    else:
-        print(response)
-        return "internal error with the API"
+
 
 
 def connect_to_db():
@@ -175,8 +211,6 @@ def talk_to_db(prepedStatementStr, valuesArr=None):
     if prepedStatementStr.lower().startswith("select"):
         result = {}
         resultKey = 0
-        # cursor.description returns the row names => [("rowName", "otherInfo"), (rowName, "otherInfo"), ...]
-        # have to call and copy cursor.description before fetchall() because fetchall() seems to screw it up
         rowNamesArr = []
         for rowInfoArr in cursor.description:
             rowNamesArr.append(rowInfoArr[0])
@@ -190,7 +224,7 @@ def talk_to_db(prepedStatementStr, valuesArr=None):
             resultKey += 1
     else:
         result = True
-        # by default Connector/Python does not autocommit, it is important to call this method after every transaction that modifies data for tables
+
         DB.commit()
 
     cursor.close()
@@ -204,6 +238,17 @@ def talk_to_db_success(response):
 def stip_dict(dictRef):
     for key, value in dictRef.items():
         dictRef[key] = value.strip()
+
+
+def arguments_validation(dictRef, expectedKeysArr):
+    if len(dictRef.keys()) < len(expectedKeysArr):
+        return ["Not enough arguments provided."]
+    elif len(dictRef.keys()) > len(expectedKeysArr):
+        return ["Too many arguments provided."]
+    elif sorted(dictRef.keys()) != sorted(expectedKeysArr):
+        return ["Unexpected arguments present."]
+
+    return "success"
 
 
 if __name__ == '__main__':
