@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
 const LIGHT_DISTANCE_X = 0.0005;
 const LIGHT_DISTANCE_Y = 0.0003;
+const server_location_send_size =
+    100; // send locations to the server every 5000 points
 
 List<LatLng> ENTIRE_MAP_POINTS = [
   LatLng(85, 90),
