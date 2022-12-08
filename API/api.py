@@ -35,7 +35,6 @@ def home_page():
     return Markup(INFO.replace("\n", "<br>"))
 
 
-# http://127.0.0.1/deviceID?deviceID=ABc1-395
 @APP.route('/deviceID/', methods=['GET'])
 def get_deviceID():
     argsDict = None
@@ -49,12 +48,14 @@ def get_deviceID():
     prepedStatementStr = ""
     valuesArr = []
 
-    # list all deviceID's
+    # list of all items
     if len(argsDict) == 0:
-        prepedStatementStr = "Select deviceID from holes"
-    else:
-        return "Multiple parameters not allowed"
+        prepedStatementStr = "SELECT deviceID from holes"
 
+    else:
+        return "No arguments allowed"
+
+    # RESPONSE
     response = talk_to_db(prepedStatementStr, valuesArr)
     if talk_to_db_success(response):
         return jsonify(response)
@@ -62,9 +63,9 @@ def get_deviceID():
         print(response)
         return "internal error with the API"
 
+# http://127.0.0.1/holes?deviceID=ABc1-395
 
-#######GET HOLES########
-# http://127.0.0.1/deviceID?deviceID=ABc1-395
+
 @APP.route('/holes/', methods=['GET'])
 def get_holes():
     argsDict = None
@@ -78,18 +79,20 @@ def get_holes():
     prepedStatementStr = ""
     valuesArr = []
 
-    # list all deviceID's
+    # list of all items
     if len(argsDict) == 0:
-        prepedStatementStr = "Select * from holes"
+        prepedStatementStr = "SELECT * from holes"
 
+    # searching for items
     elif len(argsDict) == 1:
         if "deviceID" not in argsDict:
-            return "Holes can only be searched using deviceID"
-        if "deviceID" in argsDict:
+            return "holes can only be searched using their deviceID"
+        else:
             prepedStatementStr = "SELECT coordOneX FROM holes WHERE deviceID=%s"
-            # valuesArr.append(argsDict['deviceID'])
+            valuesArr.append(argsDict['deviceID'])
+
     else:
-        return "Multiple parameters not allowed"
+        return "Only 1 argument expected"
 
     # RESPONSE
     response = talk_to_db(prepedStatementStr, valuesArr)
@@ -172,7 +175,7 @@ def talk_to_db_success(response):
 
 
 def stip_dict(dictRef):
-    for key, value in dictRef.holes():
+    for key, value in dictRef.items():
         dictRef[key] = value.strip()
 
 
