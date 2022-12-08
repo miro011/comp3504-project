@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
 import 'package:location_platform_interface/location_platform_interface.dart'
-as lpi;
+    as lpi;
 import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
@@ -24,7 +24,7 @@ class MyAppState extends State<MyApp> {
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
   var LOCALLY_RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
-  List<LatLng> EXPLORED_POSITIONS = [];
+  List<List<LatLng>> EXPLORED_POSITIONS = [];
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
   bool savingToServer = false;
@@ -45,7 +45,7 @@ class MyAppState extends State<MyApp> {
       developer.log("Fetched explored positions ${explored.length}");
       EXPLORED_POSITIONS = explored;
       EXPLORED_POSITIONS.forEach((p) {
-        addHole(p.latitude, p.longitude);
+        replaceMainPolygonAndAddNewHole(p);
       });
     });
   }
@@ -87,8 +87,9 @@ class MyAppState extends State<MyApp> {
 
     LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
 
-    if (!savingToServer && LOCALLY_RECORDED_POSITIONS.length >=
-        globals.server_location_send_size) {
+    if (!savingToServer &&
+        LOCALLY_RECORDED_POSITIONS.length >=
+            globals.server_location_send_size) {
       List<LatLng> points = [];
 
       LOCALLY_RECORDED_POSITIONS.forEach((point) {
