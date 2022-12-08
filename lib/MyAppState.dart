@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geolocator_android/geolocator_android.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
 import 'package:location_platform_interface/location_platform_interface.dart'
@@ -14,6 +15,7 @@ import 'package:tuple/tuple.dart';
 
 import 'dart:developer' as developer;
 import 'API.dart';
+import 'dart:async';
 
 ////////////////////////////////////////////////////////////////////////////////
 var indexClicked = 2;
@@ -50,6 +52,14 @@ class MyAppState extends State<MyApp> {
 
   // "Future" not needed as we will not await this function
   void _initLocationService() async {
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 1,
+    );
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen(_onLocationChangedHandler);
+
     var location = locations.Location();
 
     if (!await location.serviceEnabled()) {
@@ -66,7 +76,7 @@ class MyAppState extends State<MyApp> {
       }
     }
 
-    location.onLocationChanged.listen(_onLocationChangedHandler);
+    // location.onLocationChanged.listen(_onLocationChangedHandler);
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -76,12 +86,10 @@ class MyAppState extends State<MyApp> {
     //print("${loc.latitude} ${loc.longitude}");
   }
 
-  void _onLocationChangedHandler(locations.LocationData loc) {
+  void _onLocationChangedHandler(Position loc) {
     if (loc.latitude == null || loc.longitude == null) return;
-    double lat = loc.latitude ?? 0.0;
-    double long = loc.longitude ?? 0.0;
 
-    var newHole = calcHole(LatLng(lat, long));
+    var newHole = calcHole(LatLng(loc.latitude, loc.longitude));
     if (newHole != null) {
       replaceMainPolygonAndAddNewHole(newHole);
       LOCALLY_RECORDED_POSITIONS[DateTime.now()] = newHole;
@@ -93,7 +101,6 @@ class MyAppState extends State<MyApp> {
     if (!savingToServer &&
         LOCALLY_RECORDED_POSITIONS.length >=
             globals.server_location_send_size) {
-
       savingToServer = true;
 
       API.addExplored(LOCALLY_RECORDED_POSITIONS).then((resp) {
@@ -103,7 +110,8 @@ class MyAppState extends State<MyApp> {
           LOCALLY_RECORDED_POSITIONS.clear();
           fetchExploredPositions();
         }
-        print("Local points is now ${LOCALLY_RECORDED_POSITIONS.length} in length");
+        print(
+            "Local points is now ${LOCALLY_RECORDED_POSITIONS.length} in length");
       });
     }
   }
@@ -192,7 +200,7 @@ class MyAppState extends State<MyApp> {
         replaceMainPolygonAndAddNewHole(p);
       });
       LOCALLY_RECORDED_POSITIONS.forEach((datetime, hole) {
-          replaceMainPolygonAndAddNewHole(hole);
+        replaceMainPolygonAndAddNewHole(hole);
       });
     });
   }
@@ -200,8 +208,8 @@ class MyAppState extends State<MyApp> {
   // given the new hole it redoes the entire polygon so that it shows up in google maps
   void replaceMainPolygonAndAddNewHole(List<LatLng> hole,
       {bool clear = false}) {
+    List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
     setState(() {
-      List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
       holes.add(hole);
       _POLYGONS_SET.remove(_POLYGONS_SET.first);
       _POLYGONS_SET.add(Polygon(
