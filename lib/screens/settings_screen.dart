@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:term_project/Globals.dart';
 import 'package:term_project/config/classes.dart';
@@ -76,6 +75,11 @@ class _SettingsState extends State<Settings> {
                     index: 3,
                     clickState: indexClicked,
                   ),
+                  //About
+                  DrawerTile(
+                    index: 7,
+                    clickState: indexClicked,
+                  ),
                   //Exit
                   DrawerTile(
                     index: 4,
@@ -92,9 +96,23 @@ class _SettingsState extends State<Settings> {
           padding: const EdgeInsets.all(10),
           child: ListView(
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 15),
+              accountSetting(context, "Accounts"),
+              const SizedBox(height: 15),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
+              accountSetting(context, "Privacy and Security"),
+              const SizedBox(height: 15),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
               buildToggleOption('Dark Mode', valopt1, onToggle1),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
               buildToggleOption('Notification', valopt2, onToggle2),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
+              accountSetting(context, "Feedback"),
+              const SizedBox(height: 15),
             ],
           ),
         ),

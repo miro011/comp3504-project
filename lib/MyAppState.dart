@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,7 +11,6 @@ import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 ////////////////////////////////////////////////////////////////////////////////
 var indexClicked = 2;
@@ -33,7 +33,6 @@ class MyAppState extends State<MyApp> {
     _initLocationService();
     _POLYGONS_SET.add(globals.MAIN_POLYGON);
     _getDeviceInfo();
-
   }
 
   void _getDeviceInfo() async {
@@ -199,6 +198,11 @@ class MyAppState extends State<MyApp> {
                   //Settings
                   DrawerTile(
                     index: 3,
+                    clickState: indexClicked,
+                  ),
+                  //About
+                  DrawerTile(
+                    index: 7,
                     clickState: indexClicked,
                   ),
                   //Exit

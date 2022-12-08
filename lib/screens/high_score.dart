@@ -59,6 +59,11 @@ class _HighScoreState extends State<HighScore> {
                     index: 3,
                     clickState: indexClicked,
                   ),
+                  //About
+                  DrawerTile(
+                    index: 7,
+                    clickState: indexClicked,
+                  ),
                   //Exit
                   DrawerTile(
                     index: 4,

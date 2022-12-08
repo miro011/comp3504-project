@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:term_project/Globals.dart';
 
 /*
@@ -92,6 +91,26 @@ class DrawerTile extends StatelessWidget {
         if (index == 4) {
           SystemNavigator.pop();
         }
+        if (index == 7) {
+          showAboutDialog(
+            context: context,
+            applicationIcon: const FlutterLogo(),
+            applicationName: 'Globe Travela',
+            applicationVersion: '1.0.0',
+            applicationLegalese: 'Developed by Trance Mirenzo',
+            children: <Widget>[
+              const Padding(
+                  padding: EdgeInsets.all(15), child: Text("Miroslav Nikolov")),
+              const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Text("Terrence Plunkett")),
+              const Padding(
+                  padding: EdgeInsets.all(15), child: Text("Travis Tkachyk")),
+              const Padding(
+                  padding: EdgeInsets.all(15), child: Text("Lorenzo Young")),
+            ],
+          );
+        }
         // Navigator.pop(context);
         //Moved to the next screen selected by user, it takes the index variable
         //to reference the arraylist navigationRoutes[] in defaults.dart
@@ -129,62 +148,54 @@ Padding buildToggleOption(String title, bool value, Function onChangeMethod) {
   );
 }
 
-class DarkThemePreference {
-  static const THEME_STATUS = "THEMESTATUS";
-
-  setDarkTheme(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(THEME_STATUS, value);
-  }
-
-  Future<bool> getTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(THEME_STATUS) ?? false;
-  }
-}
-
-class DarkThemeProvider with ChangeNotifier {
-  DarkThemePreference darkThemePreference = DarkThemePreference();
-  bool _darkTheme = false;
-
-  bool get darkTheme => _darkTheme;
-
-  set darkTheme(bool value) {
-    _darkTheme = value;
-    darkThemePreference.setDarkTheme(value);
-    notifyListeners();
-  }
-}
-
-class Styles {
-  static ThemeData themeData(bool isDarkTheme, BuildContext context) {
-    return ThemeData(
-      primarySwatch: Colors.red,
-      primaryColor: isDarkTheme ? Colors.black : Colors.white,
-      backgroundColor: isDarkTheme ? Colors.black : const Color(0xffF1F5FB),
-      indicatorColor:
-          isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
-      hintColor:
-          isDarkTheme ? const Color(0xff280C0B) : const Color(0xffEECED3),
-      highlightColor:
-          isDarkTheme ? const Color(0xff372901) : const Color(0xffFCE192),
-      hoverColor:
-          isDarkTheme ? const Color(0xff3A3A3B) : const Color(0xff4285F4),
-      focusColor:
-          isDarkTheme ? const Color(0xff0B2512) : const Color(0xffA8DAB5),
-      disabledColor: Colors.grey,
-      cardColor: isDarkTheme ? const Color(0xFF151515) : Colors.white,
-      canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
-      brightness: isDarkTheme ? Brightness.dark : Brightness.light,
-      buttonTheme: Theme.of(context).buttonTheme.copyWith(
-          colorScheme: isDarkTheme
-              ? const ColorScheme.dark()
-              : const ColorScheme.light()),
-      appBarTheme: const AppBarTheme(
-        elevation: 0.0,
+GestureDetector accountSetting(BuildContext context, String title) {
+  return GestureDetector(
+    onTap: () {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                title,
+                style: GoogleFonts.acme(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text("null"),
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Close"))
+              ],
+            );
+          });
+    },
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.acme(
+              fontSize: 20,
+              color: Defaults.naviItemColor,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const Icon(Icons.arrow_forward,
+              color: Defaults.naviItemSelectedColor),
+        ],
       ),
-      textSelectionTheme: TextSelectionThemeData(
-          selectionColor: isDarkTheme ? Colors.white : Colors.black),
-    );
-  }
+    ),
+  );
 }

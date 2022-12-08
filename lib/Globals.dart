@@ -55,6 +55,7 @@ class Defaults {
     'Exit',
     'Log In',
     'Register',
+    'About',
   ];
 
   /*

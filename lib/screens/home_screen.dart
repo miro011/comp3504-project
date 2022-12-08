@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:term_project/Globals.dart';
 import 'package:term_project/config/classes.dart';
 
 /*
@@ -59,6 +60,11 @@ class _HomeState extends State<Home> {
                     index: 3,
                     clickState: indexClicked,
                   ),
+                  //About
+                  DrawerTile(
+                    index: 7,
+                    clickState: indexClicked,
+                  ),
                   //Exit
                   DrawerTile(
                     index: 4,
@@ -70,7 +76,36 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: const Center(child: Text('Home')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/background/bg05.png',
+                  height: 120.0,
+                  fit: BoxFit.fill,
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(width: 16),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.popAndPushNamed(
+                        context, Defaults.navigationRoutes[2]);
+                  },
+                  label: const Text('Explore!'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
