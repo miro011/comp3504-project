@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:term_project/Globals.dart';
 import 'package:term_project/config/classes.dart';
 
-class SettingScreen extends StatelessWidget {
-  const SettingScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Settings(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
+/*
+* Variable that is used in the DrawerTile to highlight what screen is active
+* in the navigation drawer*/
 var indexClicked = 3;
 
+//Settings Screen
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
 
@@ -23,6 +16,21 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  bool valopt1 = false;
+  bool valopt2 = false;
+
+  onToggle1(bool newValue1) {
+    setState(() {
+      valopt1 = newValue1;
+    });
+  }
+
+  onToggle2(bool newValue2) {
+    setState(() {
+      valopt2 = newValue2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,22 +55,32 @@ class _SettingsState extends State<Settings> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  //Home
                   DrawerTile(
                     index: 0,
                     clickState: indexClicked,
                   ),
+                  //High Score
                   DrawerTile(
                     index: 1,
                     clickState: indexClicked,
                   ),
+                  //Map Screen
                   DrawerTile(
                     index: 2,
                     clickState: indexClicked,
                   ),
+                  //Settings
                   DrawerTile(
                     index: 3,
                     clickState: indexClicked,
                   ),
+                  //About
+                  DrawerTile(
+                    index: 5,
+                    clickState: indexClicked,
+                  ),
+                  //Exit
                   DrawerTile(
                     index: 4,
                     clickState: indexClicked,
@@ -73,7 +91,57 @@ class _SettingsState extends State<Settings> {
           ],
         ),
       ),
-      body: const Center(child: Text('Settings')),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: ListView(
+            children: [
+              const SizedBox(height: 15),
+              accountSetting(context, "Accounts"),
+              const SizedBox(height: 15),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
+              accountSetting(context, "Privacy and Security"),
+              const SizedBox(height: 15),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
+              buildToggleOption('Dark Mode', valopt1, onToggle1),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
+              buildToggleOption('Notification', valopt2, onToggle2),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 15),
+              accountSetting(context, "Feedback"),
+              const SizedBox(height: 15),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showAboutDialog(
+            context: context,
+            applicationIcon: const FlutterLogo(),
+            applicationName: 'Globe Travela',
+            applicationVersion: '1.0.0',
+            applicationLegalese: 'Developed by Trance Mirenzo',
+            children: <Widget>[
+              const Padding(
+                  padding: EdgeInsets.all(15), child: Text("Miroslav Nikolov")),
+              const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Text("Terrence Plunkett")),
+              const Padding(
+                  padding: EdgeInsets.all(15), child: Text("Travis Tkachyk")),
+              const Padding(
+                  padding: EdgeInsets.all(15), child: Text("Lorenzo Young")),
+            ],
+          );
+        },
+        label: const Text('About'),
+        icon: const Icon(Icons.info),
+        backgroundColor: Defaults.naviItemColor,
+      ),
     );
   }
 }

@@ -3,20 +3,12 @@ import 'package:term_project/config/classes.dart';
 import '../API.dart';
 import 'dart:developer' as developer;
 
-class HighScoreScreen extends StatelessWidget {
-  const HighScoreScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HighScore(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
+/*
+* Variable that is used in the DrawerTile to highlight what screen is active
+* in the navigation drawer*/
 var indexClicked = 1;
 
+//High Score Screen
 class HighScore extends StatefulWidget {
   const HighScore({Key? key}) : super(key: key);
 
