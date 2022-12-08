@@ -41,7 +41,8 @@ def get_deviceID():
     getArgs = request.args
     try:
         argsDict = json.loads(getArgs["json"])
-    except:
+    except Exception as e:
+        print("IGNORED EXCEPTION", e)
         argsDict = {}
     stip_dict(argsDict)
 
@@ -72,7 +73,8 @@ def get_holes():
     getArgs = request.args
     try:
         argsDict = json.loads(getArgs["json"])
-    except:
+    except Exception as e:
+        print("IGNORED EXCEPTION", e)
         argsDict = {}
     stip_dict(argsDict)
 
@@ -109,7 +111,8 @@ def connect_to_db():
     try:
         if DB.is_connected():
             return "success"
-    except:
+    except Exception as e:
+        print("IGNORED EXCEPTION", e)
         pass
 
     try:
