@@ -10,6 +10,7 @@ import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 ////////////////////////////////////////////////////////////////////////////////
 var indexClicked = 2;
@@ -31,6 +32,14 @@ class MyAppState extends State<MyApp> {
     super.initState();
     _initLocationService();
     _POLYGONS_SET.add(globals.MAIN_POLYGON);
+    _getDeviceInfo();
+
+  }
+
+  void _getDeviceInfo() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    print('Running on ${androidInfo.id}');
   }
 
   // "Future" not needed as we will not await this function

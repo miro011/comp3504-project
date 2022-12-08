@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+
 const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
 const LIGHT_DISTANCE_X = 0.0005;
 const LIGHT_DISTANCE_Y = 0.0003;
@@ -38,6 +39,9 @@ Polygon MAIN_POLYGON = Polygon(
   strokeWidth: 0, // width of border
   geodesic: true,
 );
+
+
+
 
 /*
 * class to define constant values for navigation*/
