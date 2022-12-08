@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
 const LIGHT_DISTANCE_X = 0.0005;
 const LIGHT_DISTANCE_Y = 0.0003;
+const server_location_send_size =
+    100; // send locations to the server every 5000 points
 
 List<LatLng> ENTIRE_MAP_POINTS = [
   LatLng(85, 90),
@@ -31,11 +33,15 @@ List<List<LatLng>> DISCOVERED_HOLES = [];
 
 Polygon MAIN_POLYGON = Polygon(
   polygonId: PolygonId('1'),
-  points: ENTIRE_MAP_POINTS, // list of points to display polygon
-  holes: DISCOVERED_HOLES, // draws a hole in the Polygon
+  points: ENTIRE_MAP_POINTS,
+  // list of points to display polygon
+  holes: DISCOVERED_HOLES,
+  // draws a hole in the Polygon
   fillColor: Colors.blueGrey.withOpacity(0.8),
-  strokeColor: Colors.blueGrey, // border color to polygon
-  strokeWidth: 0, // width of border
+  strokeColor: Colors.blueGrey,
+  // border color to polygon
+  strokeWidth: 0,
+  // width of border
   geodesic: true,
 );
 
@@ -44,6 +50,7 @@ Polygon MAIN_POLYGON = Polygon(
 class Defaults {
   static const Color naviItemColor = Colors.blueGrey;
   static const Color naviItemSelectedColor = Colors.cyan;
+
   /*
   * Item text for the navigation drawer
   * */
