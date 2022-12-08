@@ -20,7 +20,7 @@ class MyAppState extends State<MyApp> {
 
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
+  var LOCALLY_RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
 
@@ -74,6 +74,8 @@ class MyAppState extends State<MyApp> {
     if (loc.latitude == null || loc.longitude == null) return;
     double lat = loc.latitude ?? 0.0;
     double long = loc.longitude ?? 0.0;
+
+    LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
 
     double xMin = long - globals.LIGHT_DISTANCE_X;
     double xMax = long + globals.LIGHT_DISTANCE_X;
@@ -130,6 +132,8 @@ class MyAppState extends State<MyApp> {
     ]);
 
     POLYGON_ID_COUNTER += 1;
+
+
 
     print("............................................");
     print("added");
