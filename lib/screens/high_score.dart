@@ -39,8 +39,8 @@ class _HighScoreState extends State<HighScore> {
   Widget build(BuildContext context) {
     List<Widget> children = [];
 
+    setState(() {
     highscores.forEach((user, score) {
-      setState(() {
         developer.log('Adding highscore ${user} @ ${score}');
         children.add(Text("${user} @ ${score}"));
       });

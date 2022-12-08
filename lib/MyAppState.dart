@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
 import 'package:location_platform_interface/location_platform_interface.dart'
-    as lpi;
+as lpi;
 import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
@@ -26,6 +26,7 @@ class MyAppState extends State<MyApp> {
   List<LatLng> EXPLORED_POSITIONS = [];
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
+  bool savingToServer = false;
 
   //............................................................................
 
@@ -91,6 +92,27 @@ class MyAppState extends State<MyApp> {
     addHole(lat, long);
 
     LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
+
+    if (!savingToServer && LOCALLY_RECORDED_POSITIONS.length >=
+        globals.server_location_send_size) {
+      List<LatLng> points = [];
+
+      LOCALLY_RECORDED_POSITIONS.forEach((point) {
+        points.add(LatLng(point.item1, point.item2));
+      });
+
+      savingToServer = true;
+
+      API.addExplored(points).then((resp) {
+        print("Received response from server for adding points ${resp}");
+        savingToServer = false;
+        if (resp) {
+          LOCALLY_RECORDED_POSITIONS.clear();
+          fetchExploredPositions();
+        }
+        print("Local points is now ${LOCALLY_RECORDED_POSITIONS.length}");
+      });
+    }
   }
 
   void addHole(double lat, double long) {
@@ -151,7 +173,6 @@ class MyAppState extends State<MyApp> {
     POLYGON_ID_COUNTER += 1;
 
 
-
     print("............................................");
     print("added");
     print("............................................");
@@ -166,11 +187,15 @@ class MyAppState extends State<MyApp> {
     _POLYGONS_SET.remove(_POLYGONS_SET.first);
     _POLYGONS_SET.add(Polygon(
       polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
-      points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
-      holes: holes, // draws a hole in the Polygon
+      points: globals.ENTIRE_MAP_POINTS,
+      // list of points to display polygon
+      holes: holes,
+      // draws a hole in the Polygon
       fillColor: Colors.blueGrey.withOpacity(0.8),
-      strokeColor: Colors.blueGrey, // border color to polygon
-      strokeWidth: 0, // width of border
+      strokeColor: Colors.blueGrey,
+      // border color to polygon
+      strokeWidth: 0,
+      // width of border
       geodesic: true,
     ));
   }
