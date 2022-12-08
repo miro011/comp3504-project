@@ -175,23 +175,31 @@ class MyAppState extends State<MyApp> {
   }
 
   // given the new hole it redoes the entire polygon so that it shows up in google maps
-  void replaceMainPolygonAndAddNewHole(List<LatLng> hole) {
-    List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
-    holes.add(hole);
-    _POLYGONS_SET.remove(_POLYGONS_SET.first);
-    _POLYGONS_SET.add(Polygon(
-      polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
-      points: globals.ENTIRE_MAP_POINTS,
-      // list of points to display polygon
-      holes: holes,
-      // draws a hole in the Polygon
-      fillColor: Colors.blueGrey.withOpacity(0.8),
-      strokeColor: Colors.blueGrey,
-      // border color to polygon
-      strokeWidth: 0,
-      // width of border
-      geodesic: true,
-    ));
+  void replaceMainPolygonAndAddNewHole(List<LatLng> hole, {bool clear=false}) {
+    setState(() {
+      List<List<LatLng>> holes;
+      if (!clear) {
+        holes = _POLYGONS_SET.first.holes;
+      } else {
+        holes = [];
+      }
+
+      holes.add(hole);
+      _POLYGONS_SET.remove(_POLYGONS_SET.first);
+      _POLYGONS_SET.add(Polygon(
+        polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
+        points: globals.ENTIRE_MAP_POINTS,
+        // list of points to display polygon
+        holes: holes,
+        // draws a hole in the Polygon
+        fillColor: Colors.blueGrey.withOpacity(0.8),
+        strokeColor: Colors.blueGrey,
+        // border color to polygon
+        strokeWidth: 0,
+        // width of border
+        geodesic: true,
+      ));
+    });
   }
 
   //............................................................................
