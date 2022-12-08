@@ -71,27 +71,21 @@ def get_deviceID():
 def get_holes():
     argsDict = None
     getArgs = request.args
-    try:
-        argsDict = json.loads(getArgs["json"])
-    except Exception as e:
-        print("IGNORED EXCEPTION", e)
-        argsDict = {}
-    stip_dict(argsDict)
 
     prepedStatementStr = ""
     valuesArr = []
 
     # list of all items
-    if len(argsDict) == 0:
+    if len(getArgs) == 0:
         prepedStatementStr = "SELECT * from holes"
 
     # searching for items
-    elif len(argsDict) == 1:
-        if "deviceID" not in argsDict:
+    elif len(getArgs) == 1:
+        if "deviceID" not in getArgs:
             return "holes can only be searched using their deviceID"
         else:
             prepedStatementStr = "SELECT coordOneX, coordOneY, coordTwoX, coordTwoY, coordThreeX, coordThreeY, coordFourX, coordFourY FROM holes WHERE deviceID=%s"
-            valuesArr.append(argsDict['deviceID'])
+            valuesArr.append(getArgs['deviceID'])
 
     else:
         return "Only 1 argument expected"
