@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:term_project/config/classes.dart';
 
-class RegistrationScreen extends StatelessWidget {
-  const RegistrationScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Registration(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
+/*
+* Variable that is used in the DrawerTile to highlight what screen is active
+* in the navigation drawer*/
 var indexClicked = 6;
 
 class Registration extends StatefulWidget {
@@ -47,22 +38,27 @@ class _RegistrationState extends State<Registration> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  //Home
                   DrawerTile(
                     index: 0,
                     clickState: indexClicked,
                   ),
+                  //High Score
                   DrawerTile(
                     index: 1,
                     clickState: indexClicked,
                   ),
+                  //Map Screen
                   DrawerTile(
                     index: 2,
                     clickState: indexClicked,
                   ),
+                  //Settings
                   DrawerTile(
                     index: 3,
                     clickState: indexClicked,
                   ),
+                  //Exit
                   DrawerTile(
                     index: 4,
                     clickState: indexClicked,

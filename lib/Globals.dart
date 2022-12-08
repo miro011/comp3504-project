@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 const MAX_RECORDED_POSITIONS_IN_MEMORY = 10000;
 const LIGHT_DISTANCE_X = 0.0005;
 const LIGHT_DISTANCE_Y = 0.0003;
@@ -40,9 +39,6 @@ Polygon MAIN_POLYGON = Polygon(
   geodesic: true,
 );
 
-
-
-
 /*
 * class to define constant values for navigation*/
 class Defaults {
@@ -77,7 +73,7 @@ class Defaults {
   ];
 
   /*
-  * This would be used to navigate between screens by using routing from the
+  * This would be used to navigate between screens by using Routing class from the
   * routes.dart file
   * */
   static const navigationRoutes = [
@@ -85,7 +81,7 @@ class Defaults {
     '/high_score', //[1]
     '/map_screen', //[2]
     '/settings_screen', //[3]
-    '/exit_screen', //[4]Not really used, but just for consistency.
+    '/exit_screen', //[4]
     '/login_screen', //[5]
     '/registration_screen', //[6]
     '/about_screen', //[7]

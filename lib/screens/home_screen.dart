@@ -46,22 +46,27 @@ class _HomeState extends State<Home> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  //Home
                   DrawerTile(
                     index: 0,
                     clickState: indexClicked,
                   ),
+                  //High Score
                   DrawerTile(
                     index: 1,
                     clickState: indexClicked,
                   ),
+                  //Map Screen
                   DrawerTile(
                     index: 2,
                     clickState: indexClicked,
                   ),
+                  //Settings
                   DrawerTile(
                     index: 3,
                     clickState: indexClicked,
                   ),
+                  //Exit
                   DrawerTile(
                     index: 4,
                     clickState: indexClicked,

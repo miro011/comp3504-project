@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:term_project/config/classes.dart';
 
-class AboutScreen extends StatelessWidget {
-  const AboutScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: About(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
+/*
+* Variable that is used in the DrawerTile to highlight what screen is active
+* in the navigation drawer*/
 var indexClicked = 7;
 
 class About extends StatefulWidget {
