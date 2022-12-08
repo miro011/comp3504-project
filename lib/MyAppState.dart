@@ -202,7 +202,7 @@ class MyAppState extends State<MyApp> {
                   ),
                   //About
                   DrawerTile(
-                    index: 7,
+                    index: 5,
                     clickState: indexClicked,
                   ),
                   //Exit

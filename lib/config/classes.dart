@@ -91,7 +91,7 @@ class DrawerTile extends StatelessWidget {
         if (index == 4) {
           SystemNavigator.pop();
         }
-        if (index == 7) {
+        if (index == 5) {
           showAboutDialog(
             context: context,
             applicationIcon: const FlutterLogo(),

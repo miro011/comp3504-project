@@ -62,7 +62,7 @@ class _HomeState extends State<Home> {
                   ),
                   //About
                   DrawerTile(
-                    index: 7,
+                    index: 5,
                     clickState: indexClicked,
                   ),
                   //Exit

@@ -53,8 +53,6 @@ class Defaults {
     'Map Area',
     'Settings',
     'Exit',
-    'Log In',
-    'Register',
     'About',
   ];
 
@@ -67,8 +65,6 @@ class Defaults {
     Icons.map,
     Icons.settings,
     Icons.exit_to_app,
-    Icons.login,
-    Icons.app_registration,
     Icons.info_outline,
   ];
 
@@ -82,7 +78,5 @@ class Defaults {
     '/map_screen', //[2]
     '/settings_screen', //[3]
     '/exit_screen', //[4]
-    '/login_screen', //[5]
-    '/registration_screen', //[6]
   ];
 }

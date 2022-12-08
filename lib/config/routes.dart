@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/screens/exit_screen.dart';
 import 'package:term_project/screens/home_screen.dart';
-import 'package:term_project/screens/login_screen.dart';
 
 import '../screens/high_score.dart';
-import '../screens/registration_screen.dart';
 import '../screens/settings_screen.dart';
 
 /*
@@ -23,10 +21,6 @@ class Routing {
         return MaterialPageRoute(builder: (_) => const MyApp());
       case '/settings_screen':
         return MaterialPageRoute(builder: (_) => const Settings());
-      case '/login_screen':
-        return MaterialPageRoute(builder: (_) => const Login());
-      case '/registration_screen':
-        return MaterialPageRoute(builder: (_) => const Registration());
       case '/exit_screen':
         return MaterialPageRoute(builder: (_) => const Exit());
       default:
