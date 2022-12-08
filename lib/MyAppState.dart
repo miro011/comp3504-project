@@ -44,9 +44,7 @@ class MyAppState extends State<MyApp> {
     API.getExplored().then((explored) {
       developer.log("Fetched explored positions ${explored.length}");
       EXPLORED_POSITIONS = explored;
-      EXPLORED_POSITIONS.forEach((p) {
-        replaceMainPolygonAndAddNewHole(p);
-      });
+      recreateHoles();
     });
   }
 
@@ -174,16 +172,38 @@ class MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  // given the new hole it redoes the entire polygon so that it shows up in google maps
-  void replaceMainPolygonAndAddNewHole(List<LatLng> hole, {bool clear=false}) {
+  void recreateHoles() {
     setState(() {
-      List<List<LatLng>> holes;
-      if (!clear) {
-        holes = _POLYGONS_SET.first.holes;
-      } else {
-        holes = [];
-      }
+      List<List<LatLng>> holes = [];
+      _POLYGONS_SET.remove(_POLYGONS_SET.first);
+      _POLYGONS_SET.add(Polygon(
+        polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
+        points: globals.ENTIRE_MAP_POINTS,
+        // list of points to display polygon
+        holes: holes,
+        // draws a hole in the Polygon
+        fillColor: Colors.blueGrey.withOpacity(0.8),
+        strokeColor: Colors.blueGrey,
+        // border color to polygon
+        strokeWidth: 0,
+        // width of border
+        geodesic: true,
+      ));
 
+      EXPLORED_POSITIONS.forEach((p) {
+        replaceMainPolygonAndAddNewHole(p);
+      });
+      LOCALLY_RECORDED_POSITIONS.forEach((p) {
+        addHole(p.item1, p.item2);
+      });
+    });
+  }
+
+  // given the new hole it redoes the entire polygon so that it shows up in google maps
+  void replaceMainPolygonAndAddNewHole(List<LatLng> hole,
+      {bool clear = false}) {
+    setState(() {
+      List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
       holes.add(hole);
       _POLYGONS_SET.remove(_POLYGONS_SET.first);
       _POLYGONS_SET.add(Polygon(
@@ -266,7 +286,9 @@ class MyAppState extends State<MyApp> {
         ),
       ),
       // if/else to show that the map is loading until initState() is done
-      body: CURRENT_POSITION == null ? const Center(child:Text("Loading")) : buildGoogleMap(),
+      body: CURRENT_POSITION == null
+          ? const Center(child: Text("Loading"))
+          : buildGoogleMap(),
     );
   }
 
