@@ -6,6 +6,7 @@ import 'package:term_project/config/classes.dart';
 * in the navigation drawer*/
 var indexClicked = 1;
 
+//High Score Screen
 class HighScore extends StatefulWidget {
   const HighScore({Key? key}) : super(key: key);
 

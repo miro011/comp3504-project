@@ -6,6 +6,7 @@ import 'package:term_project/config/classes.dart';
 * in the navigation drawer*/
 var indexClicked = 5;
 
+//Log in Screen
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 

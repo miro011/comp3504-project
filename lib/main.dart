@@ -24,7 +24,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      initialRoute: '/map_screen',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      initialRoute: '/settings_screen',
       onGenerateRoute: Routing.generateRoute,
     );
   }

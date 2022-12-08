@@ -55,7 +55,6 @@ class Defaults {
     'Exit',
     'Log In',
     'Register',
-    'About',
   ];
 
   /*
@@ -84,6 +83,5 @@ class Defaults {
     '/exit_screen', //[4]
     '/login_screen', //[5]
     '/registration_screen', //[6]
-    '/about_screen', //[7]
   ];
 }

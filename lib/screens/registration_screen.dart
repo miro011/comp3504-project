@@ -6,6 +6,7 @@ import 'package:term_project/config/classes.dart';
 * in the navigation drawer*/
 var indexClicked = 6;
 
+//Registration Screen
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
 

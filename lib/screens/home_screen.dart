@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:term_project/config/classes.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
-    );
-  }
-}
-
+/*
+* Variable that is used in the DrawerTile to highlight what screen is active
+* in the navigation drawer*/
 var indexClicked = 0;
 
+//Home Screen
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
