@@ -88,7 +88,7 @@ def get_holes():
         if "deviceID" not in argsDict:
             return "holes can only be searched using their deviceID"
         else:
-            prepedStatementStr = "SELECT coordOneX FROM holes WHERE deviceID=%s"
+            prepedStatementStr = "SELECT coordOneX, coordOneY, coordTwoX, coordTwoY, coordThreeX, coordThreeY, coordFourX, coordFourY FROM holes WHERE deviceID=%s"
             valuesArr.append(argsDict['deviceID'])
 
     else:
