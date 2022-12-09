@@ -22,7 +22,6 @@ class MyAppState extends State<MyApp> {
   List<List<LatLng>> locally_recorded_holes = [];
   List<List<LatLng>> remote_recorded_holes = [];
   Set<Polygon> polygons = HashSet<Polygon>(); // only has one
-  int POLYGON_ID_COUNTER = 1;
 
   //............................................................................
 
@@ -130,8 +129,6 @@ class MyAppState extends State<MyApp> {
       LatLng(yMin, xMin),
     ]);
 
-    POLYGON_ID_COUNTER += 1;
-
     // print("............................................");
     // print("added");
     // print("............................................");
@@ -145,7 +142,7 @@ class MyAppState extends State<MyApp> {
     holes.add(hole);
     polygons.remove(polygons.first);
     polygons.add(Polygon(
-      polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
+      polygonId: PolygonId('global_polygon'),
       points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
       holes: holes, // draws a hole in the Polygon
       fillColor: Colors.blueGrey.withOpacity(0.8),
