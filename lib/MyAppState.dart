@@ -68,8 +68,6 @@ class MyAppState extends State<MyApp> {
 
   void _onLocationChangedHandler(locations.LocationData loc) {
     if (loc.latitude == null || loc.longitude == null) return;
-    double lat = loc.latitude ?? 0.0;
-    double long = loc.longitude ?? 0.0;
 
     double xMin = long - globals.LIGHT_DISTANCE_X;
     double xMax = long + globals.LIGHT_DISTANCE_X;
