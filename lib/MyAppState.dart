@@ -29,7 +29,13 @@ class MyAppState extends State<MyApp> {
     super.initState();
     initLocationService();
     polygons.add(globals.MAIN_POLYGON);
-    fetchExplored();
+    // fetchExplored();
+
+    Future.delayed(const Duration(seconds: 30), () {
+      var newHole = calcNewHole(LatLng(51.1129, -114.1089));
+      addNewHole(newHole);
+      print("Just added a debug hole on nosehill");
+    });
   }
 
 
@@ -43,7 +49,6 @@ class MyAppState extends State<MyApp> {
   }
 
 
-  /// "Future" not needed as we will not await this function
   void initLocationService() async {
     var location = locations.Location();
 
@@ -153,20 +158,30 @@ class MyAppState extends State<MyApp> {
   void addNewHole(List<LatLng> hole) {
     List<List<LatLng>> holes = polygons.first.holes;
     holes.add(hole);
-    
+
     setState(() {
       polygons.remove(polygons.first);
       polygons.add(Polygon(
-        polygonId: PolygonId('global_polygon'),
+        polygonId: PolygonId('global_polygon${DateTime.now()}'),
         points: globals.ENTIRE_MAP_POINTS,
-        // list of points to display polygon
         holes: holes,
-        // draws a hole in the Polygon
         fillColor: Colors.blueGrey.withOpacity(0.8),
+
+        // Border
         strokeColor: Colors.blueGrey,
-        // border color to polygon
         strokeWidth: 0,
-        // width of border
+
+        geodesic: true,
+      ));
+
+      polygons.add(Polygon(
+        polygonId: PolygonId('hole${DateTime.now()}'),
+        points: hole,
+        fillColor: Colors.green.withOpacity(0.5),
+
+        strokeColor: Colors.black,
+        strokeWidth: 0,
+
         geodesic: true,
       ));
     });
