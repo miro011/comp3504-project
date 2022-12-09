@@ -7,6 +7,8 @@ const LIGHT_DISTANCE_Y = 0.0003;
 const server_location_send_size =
     100; // send locations to the server every 5000 points
 
+const API_URL = "34.105.39.147";
+
 List<LatLng> ENTIRE_MAP_POINTS = [
   LatLng(85, 90),
   LatLng(85, 0.1),
@@ -57,10 +59,11 @@ class Defaults {
   static const naviItemText = [
     'Home',
     'High Score',
-    'Map Area',
+    'Explore!',
     'Settings',
     'Exit',
     'About',
+    'Globe Travela',
   ];
 
   /*

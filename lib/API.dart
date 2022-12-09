@@ -11,34 +11,54 @@ import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
 import 'dart:developer' as developer;
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class API {
+  static Future<String> getDeviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    print('Running on ${androidInfo.id}');
+    return androidInfo.id;
+  }
+
   /// Return a list of all explored points from the DB.
-  ///
-  static Future<List<LatLng>> getExplored() {
+  /// Throws errors from http.get and jsonDecode.
+  static Future<List<List<LatLng>>> getExplored() async {
+    String devID = await getDeviceID();
+    List<List<LatLng>> holes = [];
+
     developer.log('Getting explored areas', name: 'API');
-    return Future
-        .delayed(
-        Duration(seconds: 2),
-            () =>
-        [
-          LatLng(51.0556, -114.0703),
-          LatLng(11.0, 11.0),
-          LatLng(12.0, 12.0),
-          LatLng(13.0, 13.0),
-          LatLng(14.0, 14.0),
-          LatLng(15.0, 15.0),
-          LatLng(16.0, 16.0),
-          LatLng(17.0, 17.0),
-        ]
-    );
+
+    // final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
+    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
+
+    if (resp.statusCode != 200) {
+      developer.log("Invalid response from API, ${resp.statusCode}:${resp.body}");
+    }
+
+    var exploredAreas = jsonDecode(resp.body);
+
+    exploredAreas.forEach((key, coords) {
+      List<LatLng> hole = [
+        LatLng(coords['coordOneX'],coords['coordOneY']),
+        LatLng(coords['coordTwoX'],coords['coordTwoY']),
+        LatLng(coords['coordThreeX'],coords['coordThreeY']),
+        LatLng(coords['coordFourX'],coords['coordFourY']),
+      ];
+      print("Recieved hole ${hole}");
+      holes.add(hole);
+    });
+
+    return holes;
   }
 
   /// Add these points to the API
   /// Returns true if it was successful, false otherwise
-  static Future<bool> addExplored(List<LatLng> newExplored) {
+  static Future<bool> addExplored(Map<DateTime, List<LatLng>> newExplored) {
     developer.log('Adding explored areas', name: 'API');
-    return Future.value(true);
+    return Future.value(false);
   }
 
   static Future<Map<String, int>> getHighscores() {

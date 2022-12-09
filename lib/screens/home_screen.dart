@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gif_view/gif_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:term_project/Globals.dart';
+import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 
 /*
@@ -29,7 +32,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         backgroundColor: Colors.transparent,
-        title: const Text('Home'),
+        title: Text(Defaults.naviItemText[6]),
       ),
       drawer: Drawer(
         child: Column(
@@ -76,34 +79,78 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/background/bg05.png',
-                  height: 120.0,
-                  fit: BoxFit.fill,
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const SizedBox(width: 16),
-                FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.popAndPushNamed(
-                        context, Defaults.navigationRoutes[2]);
-                  },
-                  label: const Text('Explore!'),
-                ),
-              ],
-            ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/icons/app_icon/App Icon BG.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(height: 350),
+                  GifView.asset(
+                    'assets/images/transparent-boy.gif',
+                    height: 200,
+                    width: 200,
+                    frameRate: 15, // default is 15 FPS
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Let's Go Explore!",
+                    style: GoogleFonts.acme(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyApp()),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 240,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue, width: 2),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                          image: const DecorationImage(
+                              image: AssetImage(
+                                  "assets/images/background/bg05.png"),
+                              fit: BoxFit.cover)),
+                      child: Text(
+                        "Let's Go Explore!",
+                        style: GoogleFonts.acme(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Defaults.naviItemSelectedColor),
+                      ), // button text
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

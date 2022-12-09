@@ -1,19 +1,15 @@
 import 'dart:collection';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
 import 'package:location_platform_interface/location_platform_interface.dart'
-as lpi;
+    as lpi;
 import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'dart:developer' as developer;
-import 'API.dart';
 
 ////////////////////////////////////////////////////////////////////////////////
 var indexClicked = 2;
@@ -23,11 +19,9 @@ class MyAppState extends State<MyApp> {
 
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  var LOCALLY_RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
-  List<LatLng> EXPLORED_POSITIONS = [];
+  var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
   Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
-  bool savingToServer = false;
 
   //............................................................................
 
@@ -37,24 +31,6 @@ class MyAppState extends State<MyApp> {
     super.initState();
     _initLocationService();
     _POLYGONS_SET.add(globals.MAIN_POLYGON);
-    _getDeviceInfo();
-    fetchExploredPositions();
-  }
-
-  void fetchExploredPositions() {
-    API.getExplored().then((explored) {
-      developer.log("Fetched explored positions ${explored.length}");
-      EXPLORED_POSITIONS = explored;
-      EXPLORED_POSITIONS.forEach((p) {
-        addHole(p.latitude, p.longitude);
-      });
-    });
-  }
-
-  void _getDeviceInfo() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    print('Running on ${androidInfo.id}');
   }
 
   // "Future" not needed as we will not await this function
@@ -90,48 +66,21 @@ class MyAppState extends State<MyApp> {
     double lat = loc.latitude ?? 0.0;
     double long = loc.longitude ?? 0.0;
 
-    addHole(lat, long);
-
-    LOCALLY_RECORDED_POSITIONS.add(Tuple2(lat, long));
-
-    if (!savingToServer && LOCALLY_RECORDED_POSITIONS.length >=
-        globals.server_location_send_size) {
-      List<LatLng> points = [];
-
-      LOCALLY_RECORDED_POSITIONS.forEach((point) {
-        points.add(LatLng(point.item1, point.item2));
-      });
-
-      savingToServer = true;
-
-      API.addExplored(points).then((resp) {
-        print("Received response from server for adding points ${resp}");
-        savingToServer = false;
-        if (resp) {
-          LOCALLY_RECORDED_POSITIONS.clear();
-          fetchExploredPositions();
-        }
-        print("Local points is now ${LOCALLY_RECORDED_POSITIONS.length}");
-      });
-    }
-  }
-
-  void addHole(double lat, double long) {
     double xMin = long - globals.LIGHT_DISTANCE_X;
     double xMax = long + globals.LIGHT_DISTANCE_X;
     double yMin = lat - globals.LIGHT_DISTANCE_Y;
     double yMax = lat + globals.LIGHT_DISTANCE_Y;
 
-    // print("********************************************");
-    // print(_POLYGONS_SET.first.holes.length);
-    // print(xMin.toString() +
-    //     " " +
-    //     xMax.toString() +
-    //     " " +
-    //     yMin.toString() +
-    //     " " +
-    //     yMax.toString());
-    // print("********************************************");
+    print("********************************************");
+    print(_POLYGONS_SET.first.holes.length);
+    print(xMin.toString() +
+        " " +
+        xMax.toString() +
+        " " +
+        yMin.toString() +
+        " " +
+        yMax.toString());
+    print("********************************************");
 
     for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
       bool xMatch = false;
@@ -142,15 +91,15 @@ class MyAppState extends State<MyApp> {
       double targetYMin = holeData[2].latitude;
       double targetYMax = holeData[0].latitude;
 
-      // print("////////////////////////////////////////////");
-      // print(targetXMin.toString() +
-      //     " " +
-      //     targetXMax.toString() +
-      //     " " +
-      //     targetYMin.toString() +
-      //     " " +
-      //     targetYMax.toString());
-      // print("////////////////////////////////////////////");
+      print("////////////////////////////////////////////");
+      print(targetXMin.toString() +
+          " " +
+          targetXMax.toString() +
+          " " +
+          targetYMin.toString() +
+          " " +
+          targetYMax.toString());
+      print("////////////////////////////////////////////");
 
       for (double x in [xMin, xMax]) {
         if (x >= targetXMin && x <= targetXMax) xMatch = true;
@@ -173,7 +122,6 @@ class MyAppState extends State<MyApp> {
 
     POLYGON_ID_COUNTER += 1;
 
-
     print("............................................");
     print("added");
     print("............................................");
@@ -188,15 +136,11 @@ class MyAppState extends State<MyApp> {
     _POLYGONS_SET.remove(_POLYGONS_SET.first);
     _POLYGONS_SET.add(Polygon(
       polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
-      points: globals.ENTIRE_MAP_POINTS,
-      // list of points to display polygon
-      holes: holes,
-      // draws a hole in the Polygon
+      points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
+      holes: holes, // draws a hole in the Polygon
       fillColor: Colors.blueGrey.withOpacity(0.8),
-      strokeColor: Colors.blueGrey,
-      // border color to polygon
-      strokeWidth: 0,
-      // width of border
+      strokeColor: Colors.blueGrey, // border color to polygon
+      strokeWidth: 0, // width of border
       geodesic: true,
     ));
   }
@@ -248,11 +192,6 @@ class MyAppState extends State<MyApp> {
                     index: 3,
                     clickState: indexClicked,
                   ),
-                  //About
-                  DrawerTile(
-                    index: 5,
-                    clickState: indexClicked,
-                  ),
                   //Exit
                   DrawerTile(
                     index: 4,
@@ -274,7 +213,7 @@ class MyAppState extends State<MyApp> {
       onMapCreated: (GoogleMapController mc) => MAP_CONTROLLER = mc,
       initialCameraPosition: CameraPosition(
         target: LatLng(CURRENT_POSITION!.latitude, CURRENT_POSITION!.longitude),
-        zoom: 11.0,
+        zoom: 15.0,
       ),
       myLocationEnabled: true,
       polygons: _POLYGONS_SET,

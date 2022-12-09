@@ -233,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
+  gif_view:
+    dependency: "direct dev"
+    description:
+      name: gif_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   glob:
     dependency: transitive
     description:
@@ -267,7 +274,7 @@ packages:
       name: google_maps_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.3.3"
   google_maps_flutter_ios:
     dependency: transitive
     description:
