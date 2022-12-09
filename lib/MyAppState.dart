@@ -22,7 +22,6 @@ class MyAppState extends State<MyApp> {
   List<List<LatLng>> remote_recorded_holes = [];
   Set<Polygon> polygons = HashSet<Polygon>(); // only has one
 
-
   // Called only once when an instance of this class is created
   @override
   void initState() {
@@ -38,7 +37,6 @@ class MyAppState extends State<MyApp> {
     });
   }
 
-
   void fetchExplored() {
     API.getExplored().then((res) {
       setState(() {
@@ -47,7 +45,6 @@ class MyAppState extends State<MyApp> {
       });
     });
   }
-
 
   void initLocationService() async {
     var location = locations.Location();
@@ -75,7 +72,6 @@ class MyAppState extends State<MyApp> {
     }); // re-runs the build method
   }
 
-
   bool holeColides(List<LatLng> newHole) {
     for (List<LatLng> holeData in polygons.first.holes) {
       bool xMatch = false;
@@ -100,7 +96,6 @@ class MyAppState extends State<MyApp> {
     return false;
   }
 
-
   List<LatLng> calcNewHole(LatLng loc) {
     double xMin = loc.longitude - globals.LIGHT_DISTANCE_X;
     double xMax = loc.longitude + globals.LIGHT_DISTANCE_X;
@@ -114,7 +109,6 @@ class MyAppState extends State<MyApp> {
       LatLng(yMax, xMin), // bottom left
     ];
   }
-
 
   void onLocationChanged(locations.LocationData loc) {
     if (loc == null || loc.latitude == null || loc.longitude == null) {
@@ -153,7 +147,6 @@ class MyAppState extends State<MyApp> {
     });
   }
 
-
   // given the new hole it redoes the entire polygon so that it shows up in google maps
   void addNewHole(List<LatLng> hole) {
     // need to use the from to make a copy of the list. Otherwise sometimes we get
@@ -186,7 +179,6 @@ class MyAppState extends State<MyApp> {
       // ));
     });
   }
-
 
   // Called automatically when state changes (setState())
   @override
@@ -250,7 +242,6 @@ class MyAppState extends State<MyApp> {
           : buildGoogleMap(),
     );
   }
-
 
   GoogleMap buildGoogleMap() {
     return GoogleMap(
