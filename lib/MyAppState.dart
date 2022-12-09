@@ -80,17 +80,6 @@ class MyAppState extends State<MyApp> {
     double yMin = lat - globals.LIGHT_DISTANCE_Y;
     double yMax = lat + globals.LIGHT_DISTANCE_Y;
 
-    // print("********************************************");
-    // print(polygons.first.holes.length);
-    // print(xMin.toString() +
-    //     " " +
-    //     xMax.toString() +
-    //     " " +
-    //     yMin.toString() +
-    //     " " +
-    //     yMax.toString());
-    // print("********************************************");
-
     for (List<LatLng> holeData in polygons.first.holes) {
       bool xMatch = false;
       bool yMatch = false;
@@ -99,16 +88,6 @@ class MyAppState extends State<MyApp> {
       double targetXMax = holeData[1].longitude;
       double targetYMin = holeData[2].latitude;
       double targetYMax = holeData[0].latitude;
-
-      // print("////////////////////////////////////////////");
-      // print(targetXMin.toString() +
-      //     " " +
-      //     targetXMax.toString() +
-      //     " " +
-      //     targetYMin.toString() +
-      //     " " +
-      //     targetYMax.toString());
-      // print("////////////////////////////////////////////");
 
       for (double x in [xMin, xMax]) {
         if (x >= targetXMin && x <= targetXMax) xMatch = true;
@@ -128,10 +107,6 @@ class MyAppState extends State<MyApp> {
       LatLng(yMin, xMax),
       LatLng(yMin, xMin),
     ]);
-
-    // print("............................................");
-    // print("added");
-    // print("............................................");
 
     setState(() {});
   }
