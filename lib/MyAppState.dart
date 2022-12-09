@@ -16,13 +16,12 @@ import 'API.dart';
 var indexClicked = 2;
 
 class MyAppState extends State<MyApp> {
-  //............................................................................
-
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
   List<List<LatLng>> locally_recorded_holes = [];
   List<List<LatLng>> remote_recorded_holes = [];
   Set<Polygon> polygons = HashSet<Polygon>(); // only has one
+
 
   // Called only once when an instance of this class is created
   @override
@@ -33,6 +32,7 @@ class MyAppState extends State<MyApp> {
     fetchExplored();
   }
 
+
   void fetchExplored() {
     API.getExplored().then((res) {
       setState(() {
@@ -42,7 +42,8 @@ class MyAppState extends State<MyApp> {
     });
   }
 
-  // "Future" not needed as we will not await this function
+
+  /// "Future" not needed as we will not await this function
   void initLocationService() async {
     var location = locations.Location();
 
@@ -68,6 +69,7 @@ class MyAppState extends State<MyApp> {
       CURRENT_POSITION = position;
     }); // re-runs the build method
   }
+
 
   bool holeColides(List<LatLng> newHole) {
     for (List<LatLng> holeData in polygons.first.holes) {
@@ -169,6 +171,7 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+
   // Called automatically when state changes (setState())
   @override
   Widget build(BuildContext context) {
@@ -232,6 +235,7 @@ class MyAppState extends State<MyApp> {
     );
   }
 
+  
   GoogleMap buildGoogleMap() {
     return GoogleMap(
       onMapCreated: (GoogleMapController mc) => MAP_CONTROLLER = mc,
