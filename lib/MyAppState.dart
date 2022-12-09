@@ -64,66 +64,105 @@ class MyAppState extends State<MyApp> {
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    setState(() => CURRENT_POSITION = position); // re-runs the build method
+    setState(() {
+      CURRENT_POSITION = position;
+    }); // re-runs the build method
   }
 
-  void onLocationChangedHandler(locations.LocationData loc) {
-    if (loc.latitude == null || loc.longitude == null) return;
-
-    double xMin = long - globals.LIGHT_DISTANCE_X;
-    double xMax = long + globals.LIGHT_DISTANCE_X;
-    double yMin = lat - globals.LIGHT_DISTANCE_Y;
-    double yMax = lat + globals.LIGHT_DISTANCE_Y;
-
+  bool holeColides(List<LatLng> newHole) {
     for (List<LatLng> holeData in polygons.first.holes) {
       bool xMatch = false;
       bool yMatch = false;
 
       double targetXMin = holeData[0].longitude;
       double targetXMax = holeData[1].longitude;
-      double targetYMin = holeData[2].latitude;
-      double targetYMax = holeData[0].latitude;
+      double targetYMax = holeData[2].latitude;
+      double targetYMin = holeData[0].latitude;
 
-      for (double x in [xMin, xMax]) {
+      for (double x in [newHole[0].longitude, newHole[1].longitude]) {
         if (x >= targetXMin && x <= targetXMax) xMatch = true;
       }
-      for (double y in [yMin, yMax]) {
+      for (double y in [newHole[0].latitude, newHole[2].latitude]) {
         if (y >= targetYMin && y <= targetYMax) yMatch = true;
       }
 
       if (xMatch == true && yMatch == true) {
-        return;
+        return true;
       } // collision detected
     }
-
-    replaceMainPolygonAndAddNewHole([
-      LatLng(yMax, xMin),
-      LatLng(yMax, xMax),
-      LatLng(yMin, xMax),
-      LatLng(yMin, xMin),
-    ]);
-
-    setState(() {});
+    return false;
   }
 
+
+  List<LatLng>? calcNewHole(LatLng) {
+    double xMin = long - globals.LIGHT_DISTANCE_X;
+    double xMax = long + globals.LIGHT_DISTANCE_X;
+    double yMin = lat - globals.LIGHT_DISTANCE_Y;
+    double yMax = lat + globals.LIGHT_DISTANCE_Y;
+
+    return [
+      LatLng(yMin, xMin), // top left
+      LatLng(yMin, xMax), // top right
+      LatLng(yMax, xMax), // bottom right
+      LatLng(yMax, xMin), // bottom left
+    ];
+  }
+
+
+  void onLocationChangedHandler(locations.LocationData loc) {
+    if (loc.latitude == null || loc.longitude == null) return;
+    List<LatLng> newHole = calcNewHole(LatLng(loc.latitude, loc.longitude));
+
+    if (holeColides(newHole)) {
+      print("New hole collides with existing holes, ignoring: ${newHole}");
+      return;
+    }
+
+    print("New hole does not collide with existing holes, adding: ${newHole}");
+    addNewHole(newHole);
+  }
+
+
+  void clearHoles() {
+    setState(() {
+      polygons.remove(polygons.first);
+      assert(polygons.length == 1, "We are drawing more polygons than we should be");
+      polygons.add(Polygon(
+        polygonId: PolygonId('global_polygon'),
+        points: globals.ENTIRE_MAP_POINTS,
+        // list of points to display polygon
+        // draws a hole in the Polygon
+        fillColor: Colors.blueGrey.withOpacity(0.8),
+        strokeColor: Colors.blueGrey,
+        // border color to polygon
+        strokeWidth: 0,
+        // width of border
+        geodesic: true,
+      ));
+    });
+  }
+
+
   // given the new hole it redoes the entire polygon so that it shows up in google maps
-  void replaceMainPolygonAndAddNewHole(List<LatLng> hole) {
-    List<List<LatLng>> holes = polygons.first.holes;
-    holes.add(hole);
-    polygons.remove(polygons.first);
-    polygons.add(Polygon(
-      polygonId: PolygonId('global_polygon'),
-      points: globals.ENTIRE_MAP_POINTS,
-      // list of points to display polygon
-      holes: holes,
-      // draws a hole in the Polygon
-      fillColor: Colors.blueGrey.withOpacity(0.8),
-      strokeColor: Colors.blueGrey,
-      // border color to polygon
-      strokeWidth: 0,
-      // width of border
-      geodesic: true,
-    ));
+  void addNewHole(List<LatLng> hole) {
+    setState(() {
+      List<List<LatLng>> holes = polygons.first.holes;
+      holes.add(hole);
+      polygons.remove(polygons.first);
+      polygons.add(Polygon(
+        polygonId: PolygonId('global_polygon'),
+        points: globals.ENTIRE_MAP_POINTS,
+        // list of points to display polygon
+        holes: holes,
+        // draws a hole in the Polygon
+        fillColor: Colors.blueGrey.withOpacity(0.8),
+        strokeColor: Colors.blueGrey,
+        // border color to polygon
+        strokeWidth: 0,
+        // width of border
+        geodesic: true,
+      ));
+    });
   }
 
   // Called automatically when state changes (setState())
