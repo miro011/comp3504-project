@@ -126,7 +126,7 @@ class MyAppState extends State<MyApp> {
       geodesic: true,
     ));
   }
-  
+
   // Called automatically when state changes (setState())
   @override
   Widget build(BuildContext context) {
