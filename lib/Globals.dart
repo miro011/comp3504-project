@@ -59,10 +59,11 @@ class Defaults {
   static const naviItemText = [
     'Home',
     'High Score',
-    'Map Area',
+    'Explore!',
     'Settings',
     'Exit',
     'About',
+    'Globe Travela',
   ];
 
   /*
