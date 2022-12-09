@@ -11,7 +11,7 @@ import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
 
-////////////////////////////////////////////////////////////////////////////////
+
 var indexClicked = 2;
 
 class MyAppState extends State<MyApp> {
@@ -22,8 +22,6 @@ class MyAppState extends State<MyApp> {
   List<List<LatLng>> locally_recorded_holes = [];
   List<List<LatLng>> remote_recorded_holes = [];
   Set<Polygon> polygons = HashSet<Polygon>(); // only has one
-
-  `//............................................................................
 
   // Called only once when an instance of this class is created
   @override
@@ -65,9 +63,6 @@ class MyAppState extends State<MyApp> {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() => CURRENT_POSITION = position); // re-runs the build method
-
-    //var loc = await location.getLocation();
-    //print("${loc.latitude} ${loc.longitude}");
   }
 
   void _onLocationChangedHandler(locations.LocationData loc) {
@@ -130,9 +125,7 @@ class MyAppState extends State<MyApp> {
       geodesic: true,
     ));
   }
-
-  //............................................................................
-
+  
   // Called automatically when state changes (setState())
   @override
   Widget build(BuildContext context) {
