@@ -31,12 +31,13 @@ class API {
 
     developer.log('Getting explored areas', name: 'API');
 
-    // final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
-    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
+     final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
+    //final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
 
     if (resp.statusCode != 200) {
       developer.log("Invalid response from API, ${resp.statusCode}:${resp.body}");
     }
+
 
     var exploredAreas = jsonDecode(resp.body);
 
@@ -61,9 +62,29 @@ class API {
     return Future.value(false);
   }
 
-  static Future<Map<String, int>> getHighscores() {
+  static Future<List> getHighscores() async {
     developer.log('Getting highscores', name: 'API');
-    return Future.value({'User A': 100, 'User B': 200, 'User C': 300});
+    List<String> deviceIDs = [];
+
+    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/'));
+
+
+    if (resp.statusCode != 200) {
+      developer.log("Invalid response from API, ${resp.statusCode}:${resp.body}");
+    }
+
+    var exploredAreas = jsonDecode(resp.body);
+
+    exploredAreas.forEach((key, value) {
+      String deviceID = value['deviceID'];
+      deviceIDs.add(value['deviceID']);
+
+      print('Recieved deviceID $deviceID');
+    });
+
+    return deviceIDs;
+
+    return Future.value(deviceIDs);
   }
 
   static Future<int> getExploredCount() {

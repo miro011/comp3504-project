@@ -23,26 +23,37 @@ class HighScore extends StatefulWidget {
 }
 
 class _HighScoreState extends State<HighScore> {
-  Map<String, int> highscores = {};
+  Map scoreCounts = Map();
+
 
   @override
   void initState() {
     API.getHighscores().then((res) {
-      developer.log("Fetched highscores: ${res}", name: 'Highscores');
-      highscores = res;
+
+      res.forEach((element) {
+        if(!scoreCounts.containsKey(element)) {
+          scoreCounts[element] = 1;
+        } else {
+          scoreCounts[element] += 1;
+        }
+      });
+
+      print(scoreCounts.length);
+
+      scoreCounts.forEach((key, value) {
+        String leadersID = key;
+        int leadersScores = value;
+
+
+
+        // print('Recieved $leadersID + $leadersScores');
+      });
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [];
-
-    setState(() {
-      highscores.forEach((user, score) {
-        developer.log('Adding highscore ${user} @ ${score}');
-        children.add(Text("${user} @ ${score}"));
-      });
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -102,25 +113,15 @@ class _HighScoreState extends State<HighScore> {
           ],
         ),
       ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            leading: const Icon(Icons.scoreboard, size: 80),
-            title: Text(
-              'High Score',
-              style: GoogleFonts.acme(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Defaults.naviItemColor,
-              ),
-            ),
-          ),
-          const ListTile(
-            leading: Icon(Icons.score_outlined),
-            title: Text('TEsting'),
-          )
-        ],
-      ),
+      body: ListView.builder(
+        itemCount: scoreCounts.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            leading: const Text("test"),
+            trailing: const Text ("test"),
+          );
+        },
+      )
     );
   }
 }
