@@ -10,7 +10,7 @@ import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
-import 'API.dart' as API;
+import 'API.dart';
 
 
 var indexClicked = 2;
