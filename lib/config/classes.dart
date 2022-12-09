@@ -32,7 +32,8 @@ class HeaderDrawer extends StatelessWidget {
           ),
           const CircleAvatar(
             radius: 40,
-            foregroundImage: AssetImage('assets/images/icons/app_icon.png'),
+            foregroundImage:
+                AssetImage('assets/images/icons/app_icon/app_icon.png'),
           ),
           const SizedBox(
             height: 10,
@@ -87,18 +88,22 @@ class DrawerTile extends StatelessWidget {
               : Defaults.naviItemColor,
         ),
       ),
-      onTap: () {
+      onTap: () async {
         if (index == 4) {
           SystemNavigator.pop();
         }
         if (index == 5) {
           showAboutDialog(
             context: context,
-            applicationIcon: const FlutterLogo(),
             applicationName: 'Globe Travela',
             applicationVersion: '1.0.0',
             applicationLegalese: 'Developed by Trance Mirenzo',
             children: <Widget>[
+              const Image(
+                height: 140,
+                image: AssetImage(
+                    'assets/images/icons/app_icon/app_icon(circular).png'),
+              ),
               const Padding(
                   padding: EdgeInsets.all(15), child: Text("Miroslav Nikolov")),
               const Padding(
@@ -151,34 +156,44 @@ Padding buildToggleOption(String title, bool value, Function onChangeMethod) {
 GestureDetector accountSetting(BuildContext context, String title) {
   return GestureDetector(
     onTap: () {
-      showDialog(
+      if (title == "Licenses") {
+        showLicensePage(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                title,
-                style: GoogleFonts.acme(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
+          applicationIcon: const Icon(Icons.newspaper_rounded),
+          applicationName: "Globe Travela",
+          applicationVersion: 'ver. 1.0.0',
+          // Other parameters
+        );
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  title,
+                  style: GoogleFonts.acme(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text("null"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text("null"),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Close"))
                 ],
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Close"))
-              ],
-            );
-          });
-    },
+              );
+            });
+      }
+    }, // onTap
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Row(

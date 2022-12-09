@@ -101,14 +101,11 @@ class _SettingsState extends State<Settings> {
               const SizedBox(height: 15),
               const Divider(height: 20, thickness: 1),
               const SizedBox(height: 15),
-              accountSetting(context, "Privacy and Security"),
+              accountSetting(context, "Licenses"),
               const SizedBox(height: 15),
               const Divider(height: 20, thickness: 1),
               const SizedBox(height: 15),
               buildToggleOption('Dark Mode', valopt1, onToggle1),
-              const Divider(height: 20, thickness: 1),
-              const SizedBox(height: 15),
-              buildToggleOption('Notification', valopt2, onToggle2),
               const Divider(height: 20, thickness: 1),
               const SizedBox(height: 15),
               accountSetting(context, "Feedback"),
@@ -121,11 +118,15 @@ class _SettingsState extends State<Settings> {
         onPressed: () {
           showAboutDialog(
             context: context,
-            applicationIcon: const FlutterLogo(),
             applicationName: 'Globe Travela',
             applicationVersion: '1.0.0',
             applicationLegalese: 'Developed by Trance Mirenzo',
             children: <Widget>[
+              const Image(
+                image: AssetImage(
+                    'assets/images/icons/app_icon/app_icon(circular).png'),
+                height: 100,
+              ),
               const Padding(
                   padding: EdgeInsets.all(15), child: Text("Miroslav Nikolov")),
               const Padding(

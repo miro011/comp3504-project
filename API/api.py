@@ -84,8 +84,11 @@ def get_holes():
         if "deviceID" not in getArgs:
             return "holes can only be searched using their deviceID"
         else:
+            devID = getArgs['deviceID']
+            print(f"Getting holes for device '{devID}'")
             prepedStatementStr = "SELECT coordOneX, coordOneY, coordTwoX, coordTwoY, coordThreeX, coordThreeY, coordFourX, coordFourY FROM holes WHERE deviceID=%s"
-            valuesArr.append(getArgs['deviceID'])
+            print(f"Executing SQL ${prepedStatementStr}")
+            valuesArr.append(devID)
 
     else:
         return "Only 1 argument expected"
@@ -252,4 +255,4 @@ def arguments_validation(dictRef, expectedKeysArr):
 
 
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=80)
+    APP.run(host='0.0.0.0', port=81)
