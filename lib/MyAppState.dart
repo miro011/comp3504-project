@@ -30,6 +30,7 @@ class MyAppState extends State<MyApp> {
     super.initState();
     initLocationService();
     polygons.add(globals.MAIN_POLYGON);
+    fetchExplored();
   }
 
   void fetchExplored() {
@@ -122,8 +123,27 @@ class MyAppState extends State<MyApp> {
     addNewHole(newHole);
     local_holes[DateTime.now()] = newHole;
 
+    uploadCachedHoles();
   }
 
+  void uploadCachedHoles() {
+    if (local_holes.length > globals.server_location_send_size) {
+      print("Sending cached holes to the server");
+      API.addExplored(local_holes).then((res) {
+        if (res) {
+          print(
+              "Received confirmation on sent holes from the server, clearing local cache");
+          setState(() {
+            local_holes = {};
+            clearHoles();
+            fetchExplored();
+          });
+        } else {
+          print("Received error from server, sticking to locally cached holes");
+        }
+      });
+    }
+  }
 
   void clearHoles() {
     setState(() {
