@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:core';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,8 +12,8 @@ import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
-import 'API.dart';
 
+import 'API.dart';
 
 var indexClicked = 2;
 
@@ -116,22 +118,25 @@ class MyAppState extends State<MyApp> {
       return;
     }
 
-      List<LatLng> newHole = calcNewHole(LatLng(loc.latitude!, loc.longitude!));
+    List<LatLng> newHole = calcNewHole(LatLng(loc.latitude!, loc.longitude!));
 
-      if (holeColides(newHole)) {
-        print("New hole collides with existing holes, ignoring: ${newHole}");
-        return;
-      }
+    if (holeColides(newHole)) {
+      print("New hole collides with existing holes, ignoring: ${newHole}");
+      return;
+    }
 
-      print("New hole does not collide with existing holes, adding: ${newHole}");
-      addNewHole(newHole);
+    print("New hole does not collide with existing holes, adding: ${newHole}");
+    addNewHole(newHole);
+    local_holes[DateTime.now()] = newHole;
+
   }
 
 
   void clearHoles() {
     setState(() {
       polygons.remove(polygons.first);
-      assert(polygons.length == 1, "We are drawing more polygons than we should be");
+      assert(polygons.length == 1,
+          "We are drawing more polygons than we should be");
       polygons.add(Polygon(
         polygonId: PolygonId('global_polygon'),
         points: globals.ENTIRE_MAP_POINTS,
