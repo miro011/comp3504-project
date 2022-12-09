@@ -60,7 +60,7 @@ class MyAppState extends State<MyApp> {
       }
     }
 
-    location.onLocationChanged.listen(onLocationChangedHandler);
+    location.onLocationChanged.listen(onLocationChanged);
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -109,7 +109,7 @@ class MyAppState extends State<MyApp> {
   }
 
 
-  void onLocationChangedHandler(locations.LocationData loc) {
+  void onLocationChanged(locations.LocationData loc) {
     if (loc == null || loc.latitude == null || loc.longitude == null) {
       print("Received a null location, ignoring");
       return;
