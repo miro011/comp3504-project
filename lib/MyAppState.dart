@@ -59,14 +59,14 @@ class MyAppState extends State<MyApp> {
       }
     }
 
-    location.onLocationChanged.listen(_onLocationChangedHandler);
+    location.onLocationChanged.listen(onLocationChangedHandler);
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() => CURRENT_POSITION = position); // re-runs the build method
   }
 
-  void _onLocationChangedHandler(locations.LocationData loc) {
+  void onLocationChangedHandler(locations.LocationData loc) {
     if (loc.latitude == null || loc.longitude == null) return;
 
     double xMin = long - globals.LIGHT_DISTANCE_X;
