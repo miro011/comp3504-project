@@ -23,7 +23,7 @@ class MyAppState extends State<MyApp> {
   List<List<LatLng>> remote_recorded_holes = [];
   Set<Polygon> polygons = HashSet<Polygon>(); // only has one
 
-  //............................................................................
+  `//............................................................................
 
   // Called only once when an instance of this class is created
   @override
@@ -143,11 +143,15 @@ class MyAppState extends State<MyApp> {
     polygons.remove(polygons.first);
     polygons.add(Polygon(
       polygonId: PolygonId('global_polygon'),
-      points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
-      holes: holes, // draws a hole in the Polygon
+      points: globals.ENTIRE_MAP_POINTS,
+      // list of points to display polygon
+      holes: holes,
+      // draws a hole in the Polygon
       fillColor: Colors.blueGrey.withOpacity(0.8),
-      strokeColor: Colors.blueGrey, // border color to polygon
-      strokeWidth: 0, // width of border
+      strokeColor: Colors.blueGrey,
+      // border color to polygon
+      strokeWidth: 0,
+      // width of border
       geodesic: true,
     ));
   }
@@ -211,7 +215,9 @@ class MyAppState extends State<MyApp> {
         ),
       ),
       // if/else to show that the map is loading until initState() is done
-      body: CURRENT_POSITION == null ? const Center(child: Text("Loading")) : buildGoogleMap(),
+      body: CURRENT_POSITION == null
+          ? const Center(child: Text("Loading"))
+          : buildGoogleMap(),
     );
   }
 
