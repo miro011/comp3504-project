@@ -19,8 +19,9 @@ class MyAppState extends State<MyApp> {
 
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
-  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
+  List<List<LatLng>> locally_recorded_holes = [];
+  List<List<LatLng>> remote_recorded_holes = [];
+  Set<Polygon> polygons = HashSet<Polygon>(); // only has one
   int POLYGON_ID_COUNTER = 1;
 
   //............................................................................
@@ -30,7 +31,16 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initLocationService();
-    _POLYGONS_SET.add(globals.MAIN_POLYGON);
+    polygons.add(globals.MAIN_POLYGON);
+    fetchExplored();
+  }
+
+  void fetchExplored() {
+    api.getExplored().then((res) {
+      setState(() {
+        remote_recorded_holes = res;
+      });
+    });
   }
 
   // "Future" not needed as we will not await this function
@@ -72,7 +82,7 @@ class MyAppState extends State<MyApp> {
     double yMax = lat + globals.LIGHT_DISTANCE_Y;
 
     // print("********************************************");
-    // print(_POLYGONS_SET.first.holes.length);
+    // print(polygons.first.holes.length);
     // print(xMin.toString() +
     //     " " +
     //     xMax.toString() +
@@ -82,7 +92,7 @@ class MyAppState extends State<MyApp> {
     //     yMax.toString());
     // print("********************************************");
 
-    for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
+    for (List<LatLng> holeData in polygons.first.holes) {
       bool xMatch = false;
       bool yMatch = false;
 
@@ -131,10 +141,10 @@ class MyAppState extends State<MyApp> {
 
   // given the new hole it redoes the entire polygon so that it shows up in google maps
   void replaceMainPolygonAndAddNewHole(List<LatLng> hole) {
-    List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
+    List<List<LatLng>> holes = polygons.first.holes;
     holes.add(hole);
-    _POLYGONS_SET.remove(_POLYGONS_SET.first);
-    _POLYGONS_SET.add(Polygon(
+    polygons.remove(polygons.first);
+    polygons.add(Polygon(
       polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
       points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
       holes: holes, // draws a hole in the Polygon
@@ -216,7 +226,7 @@ class MyAppState extends State<MyApp> {
         zoom: 15.0,
       ),
       myLocationEnabled: true,
-      polygons: _POLYGONS_SET,
+      polygons: polygons,
     );
   }
 }
