@@ -71,16 +71,16 @@ class MyAppState extends State<MyApp> {
     double yMin = lat - globals.LIGHT_DISTANCE_Y;
     double yMax = lat + globals.LIGHT_DISTANCE_Y;
 
-    print("********************************************");
-    print(_POLYGONS_SET.first.holes.length);
-    print(xMin.toString() +
-        " " +
-        xMax.toString() +
-        " " +
-        yMin.toString() +
-        " " +
-        yMax.toString());
-    print("********************************************");
+    // print("********************************************");
+    // print(_POLYGONS_SET.first.holes.length);
+    // print(xMin.toString() +
+    //     " " +
+    //     xMax.toString() +
+    //     " " +
+    //     yMin.toString() +
+    //     " " +
+    //     yMax.toString());
+    // print("********************************************");
 
     for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
       bool xMatch = false;
@@ -91,15 +91,15 @@ class MyAppState extends State<MyApp> {
       double targetYMin = holeData[2].latitude;
       double targetYMax = holeData[0].latitude;
 
-      print("////////////////////////////////////////////");
-      print(targetXMin.toString() +
-          " " +
-          targetXMax.toString() +
-          " " +
-          targetYMin.toString() +
-          " " +
-          targetYMax.toString());
-      print("////////////////////////////////////////////");
+      // print("////////////////////////////////////////////");
+      // print(targetXMin.toString() +
+      //     " " +
+      //     targetXMax.toString() +
+      //     " " +
+      //     targetYMin.toString() +
+      //     " " +
+      //     targetYMax.toString());
+      // print("////////////////////////////////////////////");
 
       for (double x in [xMin, xMax]) {
         if (x >= targetXMin && x <= targetXMax) xMatch = true;
@@ -122,9 +122,9 @@ class MyAppState extends State<MyApp> {
 
     POLYGON_ID_COUNTER += 1;
 
-    print("............................................");
-    print("added");
-    print("............................................");
+    // print("............................................");
+    // print("added");
+    // print("............................................");
 
     setState(() {});
   }
