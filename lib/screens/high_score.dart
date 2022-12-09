@@ -29,13 +29,14 @@ class _HighScoreState extends State<HighScore> {
   @override
   void initState() {
     API.getHighscores().then((res) {
-
-      res.forEach((element) {
-        if(!scoreCounts.containsKey(element)) {
-          scoreCounts[element] = 1;
-        } else {
-          scoreCounts[element] += 1;
-        }
+      setState(() {
+        res.forEach((element) {
+          if (!scoreCounts.containsKey(element)) {
+            scoreCounts[element] = 1;
+          } else {
+            scoreCounts[element] += 1;
+          }
+        });
       });
 
       print(scoreCounts.length);
@@ -43,9 +44,6 @@ class _HighScoreState extends State<HighScore> {
       scoreCounts.forEach((key, value) {
         String leadersID = key;
         int leadersScores = value;
-
-
-
         // print('Recieved $leadersID + $leadersScores');
       });
 
@@ -54,7 +52,6 @@ class _HighScoreState extends State<HighScore> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
