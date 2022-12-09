@@ -156,7 +156,9 @@ class MyAppState extends State<MyApp> {
 
   // given the new hole it redoes the entire polygon so that it shows up in google maps
   void addNewHole(List<LatLng> hole) {
-    List<List<LatLng>> holes = polygons.first.holes;
+    // need to use the from to make a copy of the list. Otherwise sometimes we get
+    // an immutable version of the list.
+    List<List<LatLng>> holes = List<List<LatLng>>.from(polygons.first.holes);
     holes.add(hole);
 
     setState(() {
