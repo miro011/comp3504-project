@@ -27,7 +27,7 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _initLocationService();
+    initLocationService();
     polygons.add(globals.MAIN_POLYGON);
     fetchExplored();
   }
@@ -41,7 +41,7 @@ class MyAppState extends State<MyApp> {
   }
 
   // "Future" not needed as we will not await this function
-  void _initLocationService() async {
+  void initLocationService() async {
     var location = locations.Location();
 
     if (!await location.serviceEnabled()) {
