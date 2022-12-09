@@ -176,16 +176,14 @@ class MyAppState extends State<MyApp> {
         geodesic: true,
       ));
 
-      polygons.add(Polygon(
-        polygonId: PolygonId('hole${DateTime.now()}'),
-        points: hole,
-        fillColor: Colors.green.withOpacity(0.5),
-
-        strokeColor: Colors.black,
-        strokeWidth: 0,
-
-        geodesic: true,
-      ));
+      // polygons.add(Polygon(
+      //   polygonId: PolygonId('hole${DateTime.now()}'),
+      //   points: hole,
+      //   fillColor: Colors.green.withOpacity(0.5),
+      //   strokeColor: Colors.black,
+      //   strokeWidth: 0,
+      //   geodesic: true,
+      // ));
     });
   }
 
