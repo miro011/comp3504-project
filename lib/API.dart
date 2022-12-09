@@ -21,9 +21,9 @@ class API {
 
   /// Return a list of all explored points from the DB.
   /// Throws errors from http.get and jsonDecode.
-  static Future<List<List<LatLng>>> getExplored() async {
+  static Future<Map<DateTime, List<LatLng>>> getExplored() async {
     String devID = await getDeviceID();
-    List<List<LatLng>> holes = [];
+    Map<DateTime, List<LatLng>> holes = {};
 
     developer.log('Getting explored areas', name: 'API');
 
@@ -44,7 +44,7 @@ class API {
         LatLng(coords['coordFourX'],coords['coordFourY']),
       ];
       print("Recieved hole ${hole}");
-      holes.add(hole);
+      holes[DateTime.utc(2000, 1, 1)] = hole;
     });
 
     return holes;

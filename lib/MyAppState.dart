@@ -18,8 +18,8 @@ var indexClicked = 2;
 class MyAppState extends State<MyApp> {
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  List<List<LatLng>> locally_recorded_holes = [];
-  List<List<LatLng>> remote_recorded_holes = [];
+  Map<DateTime, List<LatLng>> local_holes = {};
+  Map<DateTime, List<LatLng>> remote_holes = {};
   Set<Polygon> polygons = HashSet<Polygon>(); // only has one
 
   // Called only once when an instance of this class is created
@@ -41,7 +41,7 @@ class MyAppState extends State<MyApp> {
     API.getExplored().then((res) {
       setState(() {
         print("Successfully fetched holes from API: ${res.length}");
-        remote_recorded_holes = res;
+        remote_holes = res;
       });
     });
   }
