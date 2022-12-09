@@ -35,6 +35,7 @@ class MyAppState extends State<MyApp> {
   void fetchExplored() {
     api.getExplored().then((res) {
       setState(() {
+        print("Successfully fetched holes from API: ${res.length}");
         remote_recorded_holes = res;
       });
     });
