@@ -15,7 +15,6 @@ class API {
   static Future<String> getDeviceID() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    print('Running on ${androidInfo.id}');
     return androidInfo.id;
   }
 

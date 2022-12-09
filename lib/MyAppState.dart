@@ -31,6 +31,7 @@ class MyAppState extends State<MyApp> {
     initLocationService();
     polygons.add(globals.MAIN_POLYGON);
     fetchExplored();
+    API.getDeviceID().then((deviceID) => print('Running on ${deviceID}'));
   }
 
   void fetchExplored() {
