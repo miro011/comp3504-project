@@ -94,11 +94,11 @@ class MyAppState extends State<MyApp> {
   }
 
 
-  List<LatLng>? calcNewHole(LatLng) {
-    double xMin = long - globals.LIGHT_DISTANCE_X;
-    double xMax = long + globals.LIGHT_DISTANCE_X;
-    double yMin = lat - globals.LIGHT_DISTANCE_Y;
-    double yMax = lat + globals.LIGHT_DISTANCE_Y;
+  List<LatLng> calcNewHole(LatLng loc) {
+    double xMin = loc.longitude - globals.LIGHT_DISTANCE_X;
+    double xMax = loc.longitude + globals.LIGHT_DISTANCE_X;
+    double yMin = loc.latitude - globals.LIGHT_DISTANCE_Y;
+    double yMax = loc.latitude + globals.LIGHT_DISTANCE_Y;
 
     return [
       LatLng(yMin, xMin), // top left
