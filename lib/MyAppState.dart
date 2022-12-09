@@ -115,11 +115,11 @@ class MyAppState extends State<MyApp> {
     List<LatLng> newHole = calcNewHole(LatLng(loc.latitude!, loc.longitude!));
 
     if (holeColides(newHole)) {
-      print("New hole collides with existing holes, ignoring: ${newHole}");
+      // print("New hole collides with existing holes, ignoring: ${newHole}");
       return;
     }
 
-    print("New hole does not collide with existing holes, adding: ${newHole}");
+    // print("New hole does not collide with existing holes, adding: ${newHole}");
     addNewHole(newHole);
     local_holes[DateTime.now()] = newHole;
 
@@ -142,6 +142,8 @@ class MyAppState extends State<MyApp> {
           print("Received error from server, sticking to locally cached holes");
         }
       });
+    } else {
+      print("Not sending to server as we only have ${local_holes.length}");
     }
   }
 
