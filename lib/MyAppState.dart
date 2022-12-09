@@ -151,9 +151,10 @@ class MyAppState extends State<MyApp> {
 
   // given the new hole it redoes the entire polygon so that it shows up in google maps
   void addNewHole(List<LatLng> hole) {
+    List<List<LatLng>> holes = polygons.first.holes;
+    holes.add(hole);
+    
     setState(() {
-      List<List<LatLng>> holes = polygons.first.holes;
-      holes.add(hole);
       polygons.remove(polygons.first);
       polygons.add(Polygon(
         polygonId: PolygonId('global_polygon'),
@@ -235,7 +236,7 @@ class MyAppState extends State<MyApp> {
     );
   }
 
-  
+
   GoogleMap buildGoogleMap() {
     return GoogleMap(
       onMapCreated: (GoogleMapController mc) => MAP_CONTROLLER = mc,
