@@ -110,16 +110,20 @@ class MyAppState extends State<MyApp> {
 
 
   void onLocationChangedHandler(locations.LocationData loc) {
-    if (loc.latitude == null || loc.longitude == null) return;
-    List<LatLng> newHole = calcNewHole(LatLng(loc.latitude, loc.longitude));
-
-    if (holeColides(newHole)) {
-      print("New hole collides with existing holes, ignoring: ${newHole}");
+    if (loc == null || loc.latitude == null || loc.longitude == null) {
+      print("Received a null location, ignoring");
       return;
     }
 
-    print("New hole does not collide with existing holes, adding: ${newHole}");
-    addNewHole(newHole);
+      List<LatLng> newHole = calcNewHole(LatLng(loc.latitude!, loc.longitude!));
+
+      if (holeColides(newHole)) {
+        print("New hole collides with existing holes, ignoring: ${newHole}");
+        return;
+      }
+
+      print("New hole does not collide with existing holes, adding: ${newHole}");
+      addNewHole(newHole);
   }
 
 
