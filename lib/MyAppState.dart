@@ -30,13 +30,6 @@ class MyAppState extends State<MyApp> {
     super.initState();
     initLocationService();
     polygons.add(globals.MAIN_POLYGON);
-    // fetchExplored();
-
-    Future.delayed(const Duration(seconds: 30), () {
-      var newHole = calcNewHole(LatLng(51.1129, -114.1089));
-      addNewHole(newHole);
-      print("Just added a debug hole on nosehill");
-    });
   }
 
   void fetchExplored() {
