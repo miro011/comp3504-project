@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as locations;
 import 'package:location_platform_interface/location_platform_interface.dart'
-as lpi;
+    as lpi;
 import 'package:term_project/Globals.dart' as globals;
 import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
@@ -31,21 +31,23 @@ class API {
 
     developer.log('Getting explored areas', name: 'API');
 
-    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
-    // final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
+    final resp = await http
+        .get(Uri.parse('http://${globals.API_URL}/holes?deviceID=${devID}'));
+    //final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
 
     if (resp.statusCode != 200) {
-      developer.log("Invalid response from API, ${resp.statusCode}:${resp.body}");
+      developer
+          .log("Invalid response from API, ${resp.statusCode}:${resp.body}");
     }
 
     var exploredAreas = jsonDecode(resp.body);
 
     exploredAreas.forEach((key, coords) {
       List<LatLng> hole = [
-        LatLng(coords['coordOneX'],coords['coordOneY']),
-        LatLng(coords['coordTwoX'],coords['coordTwoY']),
-        LatLng(coords['coordThreeX'],coords['coordThreeY']),
-        LatLng(coords['coordFourX'],coords['coordFourY']),
+        LatLng(coords['coordOneX'], coords['coordOneY']),
+        LatLng(coords['coordTwoX'], coords['coordTwoY']),
+        LatLng(coords['coordThreeX'], coords['coordThreeY']),
+        LatLng(coords['coordFourX'], coords['coordFourY']),
       ];
       print("Recieved hole ${hole}");
       holes.add(hole);
@@ -61,9 +63,29 @@ class API {
     return Future.value(false);
   }
 
-  static Future<Map<String, int>> getHighscores() {
+  static Future<List> getHighscores() async {
     developer.log('Getting highscores', name: 'API');
-    return Future.value({'User A': 100, 'User B': 200, 'User C': 300});
+    List<String> deviceIDs = [];
+
+    final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/'));
+
+    if (resp.statusCode != 200) {
+      developer
+          .log("Invalid response from API, ${resp.statusCode}:${resp.body}");
+    }
+
+    var exploredAreas = jsonDecode(resp.body);
+
+    exploredAreas.forEach((key, value) {
+      String deviceID = value['deviceID'];
+      deviceIDs.add(value['deviceID']);
+
+      print('Recieved deviceID $deviceID');
+    });
+
+    return deviceIDs;
+
+    return Future.value(deviceIDs);
   }
 
   static Future<int> getExploredCount() {
