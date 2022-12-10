@@ -29,21 +29,19 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initLocationService();
-    polygons.add(globals.MAIN_POLYGON);
-    fetchExplored();
     API.getDeviceID().then((deviceID) => print('Running on ${deviceID}'));
   }
 
-  void fetchExplored() {
-    API.getExplored().then((res) {
-      setState(() {
-        print("Successfully fetched holes from API: ${res.length}");
-        remote_holes = res;
-        recreateHoles();
-      });
-    }).catchError((e) {
-      print("API crashed when fetching explored areas from server: ${e}");
-    });
+  Future<bool> fetchExplored() async {
+    try {
+      var res = await API.getExplored();
+      remote_holes = res;
+      recreateHoles();
+      return true;
+    } catch(err) {
+      print("API crashed when fetching explored areas from server: ${err}");
+      return false;
+    }
   }
 
   void initLocationService() async {
@@ -62,6 +60,9 @@ class MyAppState extends State<MyApp> {
         return;
       }
     }
+
+    polygons.add(globals.MAIN_POLYGON);
+    await fetchExplored();
 
     location.onLocationChanged.listen(onLocationChanged);
 
