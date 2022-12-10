@@ -119,18 +119,29 @@ def get_holes():
 
 @APP.route('/holes/', methods=['POST'])
 def add_new_hole():
-    argsDict = request.get_json()
-    stip_dict(argsDict)
+    deviceID = request.args['deviceID']
+    print(f"Received holes for device '{deviceID}'")
 
-    result = arguments_validation(argsDict, ["deviceID", "coordOneX", "coordOneY", "coordTwoX",
-                                  "coordTwoY", "coordThreeX", "coordThreeY", "coordFourX", "coordFourY"])
-    if result != "success":
-        return result
-    print(result)
-    # return f"Add item {argsDict} using database operations"
-    prepedStatementStr = "INSERT INTO holes (deviceID, coordOneX, coordOneY, coordTwoX, coordTwoY, coordThreeX, coordThreeY, coordFourX, coordFourY) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    valuesArr = [argsDict["deviceID"], argsDict["coordOneX"],
-                 argsDict["coordOneY"], argsDict["coordTwoX"], argsDict["coordTwoY"], argsDict["coordThreeX"], argsDict["coordThreeY"], argsDict["coordFourX"], argsDict["coordFourY"]]
+    holes = request.get_json()
+
+    expectedKeysArr = ["coordOneX", "coordOneY", "coordTwoX", "coordTwoY", "coordThreeX", "coordThreeY", "coordFourX", "coordFourY"]
+    sqlInsetCmdBase = "INSERT INTO holes (deviceID,coordOneX,coordOneY,coordTwoX,coordTwoY,coordThreeX,coordThreeY,coordFourX,coordFourY)"
+    sqlInsetCmdValues = ""
+    valuesArr = []
+
+    for dt, data in holes.items():
+        result = arguments_validation(data, expectedKeysArr)
+        if result != "success":
+            print(result)
+            return result
+
+        sqlInsetCmdValues += "(%s, %s, %s, %s, %s, %s, %s, %s, %s),"
+        valuesArr.append(deviceID)
+        for key in expectedKeysArr:
+            valuesArr.append(data[key])
+
+    prepedStatementStr = f"{sqlInsetCmdBase} VALUES {sqlInsetCmdValues[:-1]}" # remove last coma
+    print(prepedStatementStr)
     response = talk_to_db(prepedStatementStr, valuesArr)
 
     if talk_to_db_success(response):
@@ -139,6 +150,7 @@ def add_new_hole():
         print(response)
         return "internal error with the API"
 
+    return jsonify(success=True)
 
 @APP.route('/highscores/', methods=['GET'])
 def get_highscores():
