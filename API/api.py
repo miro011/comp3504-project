@@ -124,7 +124,8 @@ def add_new_hole():
 
     holes = request.get_json()
 
-    expectedKeysArr = ["coordOneX", "coordOneY", "coordTwoX", "coordTwoY", "coordThreeX", "coordThreeY", "coordFourX", "coordFourY"]
+    expectedKeysArr = ["coordOneX", "coordOneY", "coordTwoX", "coordTwoY",
+                       "coordThreeX", "coordThreeY", "coordFourX", "coordFourY"]
     sqlInsetCmdBase = "INSERT INTO holes (deviceID,coordOneX,coordOneY,coordTwoX,coordTwoY,coordThreeX,coordThreeY,coordFourX,coordFourY)"
     sqlInsetCmdValues = ""
     valuesArr = []
@@ -140,7 +141,8 @@ def add_new_hole():
         for key in expectedKeysArr:
             valuesArr.append(data[key])
 
-    prepedStatementStr = f"{sqlInsetCmdBase} VALUES {sqlInsetCmdValues[:-1]}" # remove last coma
+    # remove last coma
+    prepedStatementStr = f"{sqlInsetCmdBase} VALUES {sqlInsetCmdValues[:-1]}"
     print(prepedStatementStr)
     response = talk_to_db(prepedStatementStr, valuesArr)
 
@@ -179,6 +181,30 @@ def get_highscores():
     if talk_to_db_success(response):
         return jsonify(response)
 
+
+@APP.route('/holes', methods=['DELETE'])
+def delete_():
+    deviceID = request.args['deviceID']
+
+    holes = request.get_json()
+
+    sqlInsetCmdBase = "DELETE FROM holes WHERE deviceID=%s"
+
+    response = talk_to_db(
+        "SELECT itemID FROM items WHERE itemID=%s", [deviceID])
+    if not talk_to_db_success(response):
+        print(response)
+        return "error with the API"
+    if len(response) == 0:
+        return "Nonexistant device ID"
+
+    response = talk_to_db("DELETE FROM items WHERE itemID=%s", [deviceID])
+
+    if talk_to_db_success(response):
+        return jsonify(success=True)
+    else:
+        print(response)
+        return "internal error with the API"
 
 
 def connect_to_db():
