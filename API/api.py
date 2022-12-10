@@ -35,7 +35,7 @@ def home_page():
     return Markup(INFO.replace("\n", "<br>"))
 
 
-@APP.route('/deviceID/', methods=['GET'])
+@APP.route('/deviceID', methods=['GET'])
 def get_deviceID():
     argsDict = None
     getArgs = request.args
@@ -67,7 +67,7 @@ def get_deviceID():
 # http://127.0.0.1/holes?deviceID=ABc1-395
 
 
-@APP.route('/holes/', methods=['GET'])
+@APP.route('/holes', methods=['GET'])
 def get_holes():
     argsDict = None
     getArgs = request.args
@@ -117,7 +117,7 @@ def get_holes():
 
 # }
 
-@APP.route('/holes/', methods=['POST'])
+@APP.route('/holes', methods=['POST'])
 def add_new_hole():
     deviceID = request.args['deviceID']
     print(f"Received holes for device '{deviceID}'")
@@ -152,7 +152,8 @@ def add_new_hole():
 
     return jsonify(success=True)
 
-@APP.route('/highscores/', methods=['GET'])
+
+@APP.route('/highscores', methods=['GET'])
 def get_highscores():
     request.args
 
