@@ -65,10 +65,11 @@ class _HighScoreState extends State<HighScore> {
       leadersScores = value.toString();
       obj.add(
           ListTile(
-            leading: Text(leadersID),
+            leading: Text(leadersID,
+              style: TextStyle(color: Colors.blueGrey, fontSize: 25),),
             trailing: Text(
               leadersScores,
-              style: TextStyle(color: Colors.green, fontSize: 15),
+              style: TextStyle(color: Colors.blueGrey, fontSize: 25),
             ),
           ));
 
