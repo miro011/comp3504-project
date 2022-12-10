@@ -39,6 +39,7 @@ class MyAppState extends State<MyApp> {
       setState(() {
         print("Successfully fetched holes from API: ${res.length}");
         remote_holes = res;
+        recreateHoles();
       });
     }).catchError((e) {
       print("API crashed when fetching explored areas from server: ${e}");
@@ -138,7 +139,6 @@ class MyAppState extends State<MyApp> {
               "Received confirmation on sent holes from the server, clearing local cache");
           setState(() {
             local_holes = {};
-            recreateHoles();
             fetchExplored();
           });
         } else {
