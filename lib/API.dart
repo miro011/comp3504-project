@@ -30,8 +30,8 @@ class API {
     List<List<LatLng>> holes = [];
 
     developer.log('Getting explored areas', name: 'API');
-
-     final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes/?deviceID=${devID}'));
+    
+     final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes?deviceID=${devID}'));
     //final resp = await http.get(Uri.parse('http://${globals.API_URL}/holes'));
 
     if (resp.statusCode != 200) {
