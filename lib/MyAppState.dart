@@ -40,6 +40,8 @@ class MyAppState extends State<MyApp> {
         print("Successfully fetched holes from API: ${res.length}");
         remote_holes = res;
       });
+    }).catchError((e) {
+      print("API crashed when fetching explored areas from server: ${e}");
     });
   }
 
@@ -136,23 +138,40 @@ class MyAppState extends State<MyApp> {
               "Received confirmation on sent holes from the server, clearing local cache");
           setState(() {
             local_holes = {};
-            clearHoles();
+            recreateHoles();
             fetchExplored();
           });
         } else {
           print("Received error from server, sticking to locally cached holes");
         }
+      }).catchError((e) {
+        print("Error sending holes to server? ${e}");
       });
     } else {
       print("Not sending to server as we only have ${local_holes.length}");
     }
   }
 
+  void recreateHoles() {
+    print("Recreating all holes after a server refresh");
+    clearHoles();
+    local_holes.forEach((dt, hole) {
+      addNewHole(hole);
+    });
+    remote_holes.forEach((dt, hole) {
+      addNewHole(hole);
+    });
+  }
+
   void clearHoles() {
     setState(() {
+      while (polygons.length > 1) {
+        print(
+            "We are drawing more polygons than we should be... there are ${polygons.length} instead of 1");
+        polygons.remove(polygons.first);
+      }
+
       polygons.remove(polygons.first);
-      assert(polygons.length == 1,
-          "We are drawing more polygons than we should be");
       polygons.add(Polygon(
         polygonId: PolygonId('global_polygon'),
         points: globals.ENTIRE_MAP_POINTS,
@@ -168,7 +187,7 @@ class MyAppState extends State<MyApp> {
     });
   }
 
-  // given the new hole it redoes the entire polygon so that it shows up in google maps
+// given the new hole it redoes the entire polygon so that it shows up in google maps
   void addNewHole(List<LatLng> hole) {
     // need to use the from to make a copy of the list. Otherwise sometimes we get
     // an immutable version of the list.
@@ -176,6 +195,12 @@ class MyAppState extends State<MyApp> {
     holes.add(hole);
 
     setState(() {
+      while (polygons.length > 1) {
+        print(
+            "We are drawing more polygons than we should be... there are ${polygons.length} instead of 1");
+        polygons.remove(polygons.first);
+      }
+
       polygons.remove(polygons.first);
       polygons.add(Polygon(
         polygonId: PolygonId('global_polygon${DateTime.now()}'),
@@ -201,7 +226,7 @@ class MyAppState extends State<MyApp> {
     });
   }
 
-  // Called automatically when state changes (setState())
+// Called automatically when state changes (setState())
   @override
   Widget build(BuildContext context) {
     return Scaffold(
