@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:core';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,30 +13,40 @@ import 'package:term_project/MyApp.dart';
 import 'package:term_project/config/classes.dart';
 import 'package:tuple/tuple.dart';
 
-////////////////////////////////////////////////////////////////////////////////
+import 'API.dart';
+
 var indexClicked = 2;
 
 class MyAppState extends State<MyApp> {
-  //............................................................................
-
   late GoogleMapController MAP_CONTROLLER;
   Position? CURRENT_POSITION;
-  var RECORDED_POSITIONS = Queue<Tuple2<double, double>>();
-  Set<Polygon> _POLYGONS_SET = HashSet<Polygon>(); // only has one
-  int POLYGON_ID_COUNTER = 1;
-
-  //............................................................................
+  Map<DateTime, List<LatLng>> local_holes = {};
+  Map<DateTime, List<LatLng>> remote_holes = {};
+  Set<Polygon> polygons = HashSet<Polygon>(); // only has one
 
   // Called only once when an instance of this class is created
   @override
   void initState() {
     super.initState();
-    _initLocationService();
-    _POLYGONS_SET.add(globals.MAIN_POLYGON);
+    initLocationService();
+    polygons.add(globals.MAIN_POLYGON);
+    fetchExplored();
+    API.getDeviceID().then((deviceID) => print('Running on ${deviceID}'));
   }
 
-  // "Future" not needed as we will not await this function
-  void _initLocationService() async {
+  void fetchExplored() {
+    API.getExplored().then((res) {
+      setState(() {
+        print("Successfully fetched holes from API: ${res.length}");
+        remote_holes = res;
+        recreateHoles();
+      });
+    }).catchError((e) {
+      print("API crashed when fetching explored areas from server: ${e}");
+    });
+  }
+
+  void initLocationService() async {
     var location = locations.Location();
 
     if (!await location.serviceEnabled()) {
@@ -51,103 +63,170 @@ class MyAppState extends State<MyApp> {
       }
     }
 
-    location.onLocationChanged.listen(_onLocationChangedHandler);
+    location.onLocationChanged.listen(onLocationChanged);
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    setState(() => CURRENT_POSITION = position); // re-runs the build method
-
-    //var loc = await location.getLocation();
-    //print("${loc.latitude} ${loc.longitude}");
+    setState(() {
+      CURRENT_POSITION = position;
+    }); // re-runs the build method
   }
 
-  void _onLocationChangedHandler(locations.LocationData loc) {
-    if (loc.latitude == null || loc.longitude == null) return;
-    double lat = loc.latitude ?? 0.0;
-    double long = loc.longitude ?? 0.0;
-
-    double xMin = long - globals.LIGHT_DISTANCE_X;
-    double xMax = long + globals.LIGHT_DISTANCE_X;
-    double yMin = lat - globals.LIGHT_DISTANCE_Y;
-    double yMax = lat + globals.LIGHT_DISTANCE_Y;
-
-    // print("********************************************");
-    // print(_POLYGONS_SET.first.holes.length);
-    // print(xMin.toString() +
-    //     " " +
-    //     xMax.toString() +
-    //     " " +
-    //     yMin.toString() +
-    //     " " +
-    //     yMax.toString());
-    // print("********************************************");
-
-    for (List<LatLng> holeData in _POLYGONS_SET.first.holes) {
+  bool holeColides(List<LatLng> newHole) {
+    for (List<LatLng> holeData in polygons.first.holes) {
       bool xMatch = false;
       bool yMatch = false;
 
       double targetXMin = holeData[0].longitude;
       double targetXMax = holeData[1].longitude;
-      double targetYMin = holeData[2].latitude;
-      double targetYMax = holeData[0].latitude;
+      double targetYMax = holeData[2].latitude;
+      double targetYMin = holeData[0].latitude;
 
-      // print("////////////////////////////////////////////");
-      // print(targetXMin.toString() +
-      //     " " +
-      //     targetXMax.toString() +
-      //     " " +
-      //     targetYMin.toString() +
-      //     " " +
-      //     targetYMax.toString());
-      // print("////////////////////////////////////////////");
-
-      for (double x in [xMin, xMax]) {
+      for (double x in [newHole[0].longitude, newHole[1].longitude]) {
         if (x >= targetXMin && x <= targetXMax) xMatch = true;
       }
-      for (double y in [yMin, yMax]) {
+      for (double y in [newHole[0].latitude, newHole[2].latitude]) {
         if (y >= targetYMin && y <= targetYMax) yMatch = true;
       }
 
       if (xMatch == true && yMatch == true) {
-        return;
+        return true;
       } // collision detected
     }
-
-    replaceMainPolygonAndAddNewHole([
-      LatLng(yMax, xMin),
-      LatLng(yMax, xMax),
-      LatLng(yMin, xMax),
-      LatLng(yMin, xMin),
-    ]);
-
-    POLYGON_ID_COUNTER += 1;
-
-    // print("............................................");
-    // print("added");
-    // print("............................................");
-
-    setState(() {});
+    return false;
   }
 
-  // given the new hole it redoes the entire polygon so that it shows up in google maps
-  void replaceMainPolygonAndAddNewHole(List<LatLng> hole) {
-    List<List<LatLng>> holes = _POLYGONS_SET.first.holes;
+  List<LatLng> calcNewHole(LatLng loc) {
+    double xMin = loc.longitude - globals.LIGHT_DISTANCE_X;
+    double xMax = loc.longitude + globals.LIGHT_DISTANCE_X;
+    double yMin = loc.latitude - globals.LIGHT_DISTANCE_Y;
+    double yMax = loc.latitude + globals.LIGHT_DISTANCE_Y;
+
+    return [
+      LatLng(yMin, xMin), // top left
+      LatLng(yMin, xMax), // top right
+      LatLng(yMax, xMax), // bottom right
+      LatLng(yMax, xMin), // bottom left
+    ];
+  }
+
+  void onLocationChanged(locations.LocationData loc) {
+    if (loc == null || loc.latitude == null || loc.longitude == null) {
+      print("Received a null location, ignoring");
+      return;
+    }
+
+    List<LatLng> newHole = calcNewHole(LatLng(loc.latitude!, loc.longitude!));
+
+    if (holeColides(newHole)) {
+      // print("New hole collides with existing holes, ignoring: ${newHole}");
+      return;
+    }
+
+    // print("New hole does not collide with existing holes, adding: ${newHole}");
+    addNewHole(newHole);
+    local_holes[DateTime.now()] = newHole;
+
+    uploadCachedHoles();
+  }
+
+  void uploadCachedHoles() {
+    if (local_holes.length > globals.server_location_send_size) {
+      print("Sending cached holes to the server");
+      API.addExplored(local_holes).then((res) {
+        if (res) {
+          print(
+              "Received confirmation on sent holes from the server, clearing local cache");
+          setState(() {
+            local_holes = {};
+            fetchExplored();
+          });
+        } else {
+          print("Received error from server, sticking to locally cached holes");
+        }
+      }).catchError((e) {
+        print("Error sending holes to server? ${e}");
+      });
+    } else {
+      print("Not sending to server as we only have ${local_holes.length}");
+    }
+  }
+
+  void recreateHoles() {
+    print("Recreating all holes after a server refresh");
+    clearHoles();
+    local_holes.forEach((dt, hole) {
+      addNewHole(hole);
+    });
+    remote_holes.forEach((dt, hole) {
+      addNewHole(hole);
+    });
+  }
+
+  void clearHoles() {
+    setState(() {
+      while (polygons.length > 1) {
+        print(
+            "We are drawing more polygons than we should be... there are ${polygons.length} instead of 1");
+        polygons.remove(polygons.first);
+      }
+
+      polygons.remove(polygons.first);
+      polygons.add(Polygon(
+        polygonId: PolygonId('global_polygon'),
+        points: globals.ENTIRE_MAP_POINTS,
+        // list of points to display polygon
+        // draws a hole in the Polygon
+        fillColor: Colors.blueGrey.withOpacity(0.8),
+        strokeColor: Colors.blueGrey,
+        // border color to polygon
+        strokeWidth: 0,
+        // width of border
+        geodesic: true,
+      ));
+    });
+  }
+
+// given the new hole it redoes the entire polygon so that it shows up in google maps
+  void addNewHole(List<LatLng> hole) {
+    // need to use the from to make a copy of the list. Otherwise sometimes we get
+    // an immutable version of the list.
+    List<List<LatLng>> holes = List<List<LatLng>>.from(polygons.first.holes);
     holes.add(hole);
-    _POLYGONS_SET.remove(_POLYGONS_SET.first);
-    _POLYGONS_SET.add(Polygon(
-      polygonId: PolygonId(POLYGON_ID_COUNTER.toString()),
-      points: globals.ENTIRE_MAP_POINTS, // list of points to display polygon
-      holes: holes, // draws a hole in the Polygon
-      fillColor: Colors.blueGrey.withOpacity(0.8),
-      strokeColor: Colors.blueGrey, // border color to polygon
-      strokeWidth: 0, // width of border
-      geodesic: true,
-    ));
+
+    setState(() {
+      while (polygons.length > 1) {
+        print(
+            "We are drawing more polygons than we should be... there are ${polygons.length} instead of 1");
+        polygons.remove(polygons.first);
+      }
+
+      polygons.remove(polygons.first);
+      polygons.add(Polygon(
+        polygonId: PolygonId('global_polygon${DateTime.now()}'),
+        points: globals.ENTIRE_MAP_POINTS,
+        holes: holes,
+        fillColor: Colors.blueGrey.withOpacity(0.8),
+
+        // Border
+        strokeColor: Colors.blueGrey,
+        strokeWidth: 0,
+
+        geodesic: true,
+      ));
+
+      // polygons.add(Polygon(
+      //   polygonId: PolygonId('hole${DateTime.now()}'),
+      //   points: hole,
+      //   fillColor: Colors.green.withOpacity(0.5),
+      //   strokeColor: Colors.black,
+      //   strokeWidth: 0,
+      //   geodesic: true,
+      // ));
+    });
   }
 
-  //............................................................................
-
-  // Called automatically when state changes (setState())
+// Called automatically when state changes (setState())
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,7 +283,9 @@ class MyAppState extends State<MyApp> {
         ),
       ),
       // if/else to show that the map is loading until initState() is done
-      body: CURRENT_POSITION == null ? const Center(child: Text("Loading")) : buildGoogleMap(),
+      body: CURRENT_POSITION == null
+          ? const Center(child: Text("Loading"))
+          : buildGoogleMap(),
     );
   }
 
@@ -216,7 +297,7 @@ class MyAppState extends State<MyApp> {
         zoom: 15.0,
       ),
       myLocationEnabled: true,
-      polygons: _POLYGONS_SET,
+      polygons: polygons,
     );
   }
 }
