@@ -1,6 +1,7 @@
 # Android App - Globe Travela
 
 <img src="assets/images/icons/app_icon/app_icon.png" alt="logo" width="200"/>
+<img src="preview.png" alt="logo" width="400"/>
 
 ## Group Info
 - Terrence Plunkett
