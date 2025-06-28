@@ -1,4 +1,6 @@
-# COMP 3504 Term Project for Fall 2022.
+# Android App - GlobeTravela
+
+![logo](assets/images/icons/app_icon/app_icon.png)
 
 ## Group Info
 - Terrence Plunkett
@@ -6,22 +8,18 @@
 - Miroslav Nikolov
 - Travis Tkachyk
 
-## SCRUM Info
-### Story Point Rubric
-[Source](https://asana.com/resources/story-points)
-![Story Points Rubric](https://assets.asana.biz/m/2d3019c97967427d/original/inline-story-points-1-2x.jpg)
-
-## Structure (suggestion from Terrence)
+## Structure
 ### /backend
-Contains anything for the backend APIs, databases, and such.
+Contains a custom Python Flask API hosted on Google Cloud to save user progress.
+Access Google Maps' API to display the map.
 
 ### /frontend
-Contains the web UI or app project files (if developing in an IDE).
+Contains the front-end interface of the application
 
 ## Change Procedure
 The main branch is protected (no commits directly to it).
 You must create a branch from main, make your changes, then pull request to merge into main.
 _This prevents anyone from accidentally overwriting other's changes in main or rewriting the history. I think it's good practice._
 
-## Building and Hosting
-Terrence plans on making everything server-side into Docker images for easy hosting.
+## Testing, Building and Hosting
+Automated Gitgub Actions test, Docker images for easy hosting on Google Cloud.
